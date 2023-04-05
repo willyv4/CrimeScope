@@ -1,4 +1,4 @@
-# <div style="text-align:center;" >CrimeScope</div>
+# <div style="text-align:center;">CrimeScope</div>
 
 ## APIs:
 
@@ -6,8 +6,8 @@
 
 > - Chat GPT API `https://platform.openai.com/docs/introduction`
 
---
+-
 
 ## Database Schema:
 
-> <img src="static/images/QuickDBD-CrimeScope.png"/>
+<img src="static/images/QuickDBD-CrimeScope.png"/>
