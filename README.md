@@ -2,9 +2,9 @@
 
 ## APIs:
 
-- Rapid API "Find Places to Live" `https://rapidapi.com/apimaker/api/find-places-to-live/`
+- <a href="https://rapidapi.com/apimaker/api/find-places-to-live/">Rapid API "Find Places to Live"</a>
 
-- Chat GPT API `https://platform.openai.com/docs/introduction`
+- <a href="https://platform.openai.com/docs/introduction">Chat GPT API</a>
 
 ## Database Schema:
 
