@@ -91,21 +91,26 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    place_city_url = db.ForeignKey("places.city_url", primary_key=True)
-    user_id = db.ForeignKey("users.id", primary_key=True, ondelete="CASCADE")
+
+    place_city_url = db.Column(db.Text, db.ForeignKey(
+        "places.city_url"), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
+
     created_at = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow())
 
     place = db.relationship('Place', backref='posts')
-    user = db.relationship('User', backref='posts',
-                           cascade='all, delete-orphan')
+    user = db.relationship('User', backref='posts', single_parent=True)
 
 
 class Vote(db.Model):
-    """ Accuracy Votes table """
+    """Accuracy Votes table"""
 
     __tablename__ = "votes"
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    post_id = db.ForeignKey("posts.id", nullable=False)
-    user_id = db.ForeignKey("users.id", ondelete="CASCADE", nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)

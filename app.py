@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, flash, request, session, g
 from sqlalchemy.exc import IntegrityError
-from models import Users, Posts, Places, Votes, connect_db, db
+from models import User, Post, Place, Vote, connect_db, db
 import os
 
 app = Flask(__name__)
