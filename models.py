@@ -19,7 +19,7 @@ def connect_db(app):
     app.app_context().push()
 
 
-class Users(db.Model):
+class User(db.Model):
     """Users table"""
 
     __tablename__ = "users"
@@ -34,8 +34,46 @@ class Users(db.Model):
         default=datetime.utcnow(),
     )
 
+    @classmethod
+    def signup(cls, username, email, password):
+        """Sign up user.
 
-class Places(db.Model):
+        Hashes password and adds user to system.
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = User(
+            username=username,
+            email=email,
+            password=hashed_pwd,
+        )
+
+        db.session.add(user)
+        return user
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Find user with `username` and `password`.
+
+        This is a class method (call it on the class, not an individual user.)
+        It searches for a user whose password hash matches this password
+        and, if it finds such a user, returns that user object.
+
+        If can't find matching user (or if password is wrong), returns False.
+        """
+
+        user = cls.query.filter_by(username=username).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False
+
+
+class Place(db.Model):
     """ Places table """
 
     __tablename__ = "places"
@@ -45,7 +83,7 @@ class Places(db.Model):
     state = db.Column(db.Text, nullable=False)
 
 
-class Posts(db.Model):
+class Post(db.Model):
     """Posts table """
 
     __tablename__ = "posts"
@@ -58,12 +96,12 @@ class Posts(db.Model):
     created_at = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow())
 
-    place = db.relationship('Places', backref='posts')
-    user = db.relationship('Users', backref='posts',
+    place = db.relationship('Place', backref='posts')
+    user = db.relationship('User', backref='posts',
                            cascade='all, delete-orphan')
 
 
-class Votes(db.Model):
+class Vote(db.Model):
     """ Accuracy Votes table """
 
     __tablename__ = "votes"
