@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mx-auto py-8">
+  <div class="max-w-lg mx-auto">
+    <h1 class="text-4xl font-bold mb-4">{{ zipcode }}</h1>
+    <div class="grid grid-cols-2 gap-4 mb-8"></div>
+    <div class="grid grid-cols-2 gap-4 mb-8"></div>
+    <h2 class="text-2xl font-bold mb-4">Violent Crime Rates</h2>
+    <ul>
+      {% for crime in v_crime %}
+      <li>{{crime}}</li>
+      {% endfor %}
+    </ul>
+
+    <h2 class="text-2xl font-bold mb-4">Property Crime Rates</h2>
+    <ul>
+      {% for crime in p_crime %}
+      <li>{{crime}}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
