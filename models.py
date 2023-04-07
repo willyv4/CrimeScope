@@ -1,6 +1,7 @@
 import bcrypt
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from flask_bcrypt import Bcrypt
 
 
@@ -33,6 +34,10 @@ class User(db.Model):
         nullable=False,
         default=datetime.utcnow(),
     )
+
+    posts = db.relationship('Post', backref='users',
+                            cascade='all, delete-orphan')
+    votes = db.relationship('Post', secondary='votes')
 
     @classmethod
     def signup(cls, username, email, password):
@@ -96,13 +101,18 @@ class Post(db.Model):
         "places.city_url"), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "users.id", ondelete="CASCADE"), nullable=False)
+        "users.id", ondelete="CASCADE"))
 
     created_at = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow())
 
     place = db.relationship('Place', backref='posts')
-    user = db.relationship('User', backref='posts', single_parent=True)
+    user = db.relationship('User')
+    votes = db.relationship('Vote', backref='post')
+
+    @property
+    def num_votes(self):
+        return db.session.query(func.count(Vote.id)).filter_by(post_id=self.id).scalar()
 
 
 class Vote(db.Model):

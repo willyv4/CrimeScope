@@ -1,9 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <form id="city-form" method="POST" class="w-full max-w-sm mx-auto">
-  {{ form.hidden_tag() }}
-  <!--add type=hidden form fields -->
-
-  {% for field in form if field.widget.input_type != 'hidden' %}
+  {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
+  'hidden' %}
 
   <div class="mb-4">
     <label

@@ -11,7 +11,54 @@
     <title>Document</title>
   </head>
   <body>
-    <nav></nav>
+    <nav class="bg-gray-900 text-white py-6">
+      <div class="container mx-auto px-4">
+        <ul class="flex justify-between">
+          <li>
+            <a href="/" class="text-xl font-bold">CrimeScope</a>
+          </li>
+          <li>
+            <ul class="flex space-x-4">
+              {% if not g.user %}
+              <li>
+                <a
+                  href="/signup"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >Sign up</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/login"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >Log in</a
+                >
+              </li>
+              {% else %}
+              <li>
+                <a
+                  href="/user_profile/{{g.user.id}}"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >Your profile</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/logout"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >Log out</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!--  -->
+    <!--  -->
+    <!--  -->
 
     {% block content %} {% endblock %}
   </body>

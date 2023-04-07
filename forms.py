@@ -1,6 +1,5 @@
-from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, HiddenField, SelectField
+from wtforms import StringField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Email, Length
 
 
@@ -28,3 +27,15 @@ class CitySearchForm(FlaskForm):
                        DataRequired(message=("Please enter city."))])
     state = SelectField("State", choices=[(state, state) for state in us_states], validators=[
                         DataRequired(message=("Please enter state."))])
+
+
+class CityPostForm(FlaskForm):
+
+    title = StringField("Title", validators=[DataRequired()])
+    content = StringField("Safety Tips & Stories", validators=[DataRequired()])
+
+
+class EditUserForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[Length(min=6)])
