@@ -65,5 +65,7 @@ post = Post.query.get(9)
 for user in User.query.all():
     vote = Vote(post_id=post.id, user_id=user.id)
     db.session.add(vote)
+    vote = Vote(post_id=8, user_id=user.id)
+    db.session.add(vote)
 
 db.session.commit()

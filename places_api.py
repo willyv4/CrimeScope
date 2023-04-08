@@ -1,8 +1,6 @@
 import requests
 import json
-import time
 from config import rapid_api_key, rapid_api_host
-from openAI_api import generate_ai_response
 
 
 def get_city_url(city):

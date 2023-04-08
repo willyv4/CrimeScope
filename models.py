@@ -110,6 +110,15 @@ class Post(db.Model):
     user = db.relationship('User')
     votes = db.relationship('Vote', backref='post')
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'content': self.content,
+            'place_city_url': self.place_city_url,
+            'user_id': self.user_id,
+        }
+
     @property
     def num_votes(self):
         return db.session.query(func.count(Vote.id)).filter_by(post_id=self.id).scalar()

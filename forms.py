@@ -23,9 +23,9 @@ us_states = ["al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", "
 
 
 class CitySearchForm(FlaskForm):
-    city = StringField("City", validators=[
+    city = StringField("City", id="city-input", validators=[
                        DataRequired(message=("Please enter city."))])
-    state = SelectField("State", choices=[(state, state) for state in us_states], validators=[
+    state = SelectField("State", id="state-input", choices=[(state, state) for state in us_states], validators=[
                         DataRequired(message=("Please enter state."))])
 
 

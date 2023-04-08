@@ -5,10 +5,8 @@ from config import openai_api_key
 openai.api_key = openai_api_key
 
 
-def generate_ai_response(crime_data, place, city):
+def generate_ai_response(crime_data, city):
     # structure api data dynamically for prompt
-    place = city
-    crime_data = crime_data['crime-safety']
 
     # extract and compare violent crime data
     violent_crime_list = []
@@ -30,7 +28,7 @@ def generate_ai_response(crime_data, place, city):
 
     # Set up the crime data prompt
     prompt = f"""
-    Crime data for the city of {place}
+    Crime data for the city of {city}
 
     Violent Crimes:
     {violent_crime_list}
@@ -38,11 +36,11 @@ def generate_ai_response(crime_data, place, city):
     Property Crimes:
     {property_crime_list}
 
-    Provide a simple summary about {place}'s crime and illustrate the likelihood of crime victimization as a percentage.
+    Provide a simple summary about {city}'s crime and illustrate the likelihood of crime victimization as a percentage.
 
-    If there is crime related dangerous areas within {place} name the top 3 and explain why and provide 3 safety tips in this {place}.
+    If there is crime related dangerous areas within {city} name the top 3 and explain why and provide 3 safety tips in this {city}.
 
-    If not explain 3 ways to safe in {place} and it's surrounding areas in terms of weather and wildlife.
+    If not explain 3 ways to safe in {city} and it's surrounding areas in terms of weather and wildlife.
     """
 
     # Set up the chat API parameters

@@ -1,4 +1,6 @@
-from flask import Flask, render_template, redirect, flash, request, session, g
+import requests
+from turtle import pos
+from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
 from sqlalchemy.exc import IntegrityError
 from models import User, Post, Place, Vote, connect_db, db
 from forms import CityPostForm, CitySearchForm, EditUserForm, LoginForm, UserAddForm
@@ -7,6 +9,8 @@ from places_api import get_city_url, get_crime_data
 from sqlalchemy import desc, func
 import os
 import time
+import json
+
 
 CURR_USER_KEY = "curr_user"
 
@@ -128,8 +132,10 @@ def logout():
 @app.route('/', methods=["GET", "POST"])
 def homepage():
     """Show homepage:
-
     """
+    place_url = None
+    city = None
+    place_type = None
 
     if g.user:
 
@@ -139,11 +145,11 @@ def homepage():
             city = form.city.data
             state = form.state.data
             place = f"{city} {state}"
-            # place_url, place_type = get_city_url(place)
+            place_url, place_type = get_city_url(place)
 
             # create fake vars for testing
-            place_url = "atlanta-fulton-ga"
-            place_type = "Town"
+            # place_url = "atlanta-fulton-ga"
+            # place_type = "Town"
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
@@ -161,93 +167,76 @@ def homepage():
                     flash(
                         "Whoops, looks like that search didn't work try something else", "danger")
 
-        return render_template("home.html", form=form)
+        return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type)
     else:
         return render_template('home-anon.html')
 
 
 @app.route('/<place_url>/<place_type>/<city>', methods=["GET", "POST"])
 def show_crime_data(place_url, place_type, city):
-    # @app.route('/atlanta-fulton-ga/Town/atlanta', methods=["GET", "POST"])
-    # def show_crime_data():
 
-    place_url = "atlanta-fulton-ga"
-    place_type = place_type
-    city = city
+    if not g.user:
+        flash("Access unauthorized.", "danger")
 
-    # time.sleep(1)
-    # crime_data = get_crime_data(place_url, place_type)
+        return redirect("/")
+
+    # place_url = "atlanta-fulton-ga"
+    # place_type = place_type
+    # city = city
+        # crime_data = {
+    #     'Violent Crimes': {
+    #         'Assault': {'value': 664.72, 'national': 282.69},
+    #         'Murder': {'value': 30.5, 'national': 6.08},
+    #         'Rape': {'value': 28.78, 'national': 40.68},
+    #         'Robbery': {'value': 160.18, 'national': 135.53}
+    #     },
+    #     'Property Crimes': {
+    #         'Burglary': {'value': 324.01, 'national': 500.13},
+    #         'Theft': {'value': 2737.91, 'national': 2042.79},
+    #         'Motor Vehicle Theft': {'value': 666.79, 'national': 284.04}
+    #     }
+    # }
+
+    # crime_data_json = json.dumps(crime_data)
+    # ai_resp_url = f"http://127.0.0.1:5000/ai_resp/{city}"
+    # response = requests.post(
+    #     ai_resp_url, json=crime_data_json)
+    # print(response)
+
+    time.sleep(1)
+    crime_data = get_crime_data(place_url, place_type)
+
     # ai_resp = generate_ai_response(crime_data, place_type, city)
 
     # structure api data dynamically for prompt
-    # crime_data = crime_data['crime-safety']
+    crimes = crime_data['crime-safety']
 
-    # # extract and compare violent crime data
-    # violent_crime_list = []
-    # violent_crimes = crime_data['Violent Crimes']
-    # for crime_name, crime_values in violent_crimes.items():
-    #     crime_value = crime_values['value']
-    #     national_crime = crime_values['national']
-    #     violent_crime_list.append(
-    #         f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
+    session["crimes"] = crimes
+    session["city"] = city
 
-    # # extract and compare property crime data
-    # property_crime_list = []
-    # property_crimes = crime_data['Property Crimes']
-    # for crime_name, crime_values in property_crimes.items():
-    #     crime_value = crime_values['value']
-    #     national_crime = crime_values['national']
-    #     property_crime_list.append(
-    #         f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
+    # extract and compare violent crime data
+    violent_crime_list = []
+    violent_crimes = crimes['Violent Crimes']
+    for crime_name, crime_values in violent_crimes.items():
+        crime_value = crime_values['value']
+        national_crime = crime_values['national']
+        violent_crime_list.append(
+            f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
 
-    # ai_resp = ai_resp
-    # v_crime = violent_crime_list
-    # p_crime = property_crime_list
-
-    form = CityPostForm()
-
-    if form.validate_on_submit():
-
-        title = form.title.data
-        content = form.content.data
-
-        post = Post(title=title, content=content,
-                    place_city_url=place_url, user_id=g.user.id)
-
-        db.session.add(post)
-        db.session.commit()
-        flash("Post added succesfully", "success")
-
-        return redirect("/atlanta-fulton-ga/Town/atlanta")
+    # extract and compare property crime data
+    property_crime_list = []
+    property_crimes = crimes['Property Crimes']
+    for crime_name, crime_values in property_crimes.items():
+        crime_value = crime_values['value']
+        national_crime = crime_values['national']
+        property_crime_list.append(
+            f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
 
     posts = Post.query.filter_by(place_city_url=place_url).\
         outerjoin(Vote).group_by(Post.id).\
         order_by(desc(func.count(Vote.id))).all()
 
-    return render_template("users/show_crime_data.html", form=form, posts=posts)
-
-
-@app.route('/vote/<int:post_id>/up')
-def handle_vote(post_id):
-
-    user = g.user
-    post = Post.query.get_or_404(post_id)
-
-    # if the user = the user's post ensure they can't like their own post
-    if post.user == user:
-        flash("you can't upvote your own post", "error")
-        return redirect('/atlanta-fulton-ga/Town/atlanta')
-    # if the post is in user's likes then remove the "like"
-    if post in user.votes:
-        user.votes.remove(post)
-        db.session.commit()
-        flash("vote removed", "success")
-    # else like the post
-    else:
-        user.votes.append(post)
-        db.session.commit()
-        flash("post upvotted", 'success')
-    return redirect('/atlanta-fulton-ga/Town/atlanta')
+    return render_template("users/show_crime_data.html", posts=posts, place_url=place_url, city=city, v_crime=violent_crime_list, p_crime=property_crime_list)
 
 
 @app.route("/user_profile/<int:user_id>", methods=["GET", "POST"])
@@ -281,18 +270,8 @@ def delete_user():
 
     if not g.user:
         flash("Access unauthorized.", "danger")
-        print("######################")
-        print("######################")
-        print("not current user")
-        print("######################")
-        print("######################")
-        return redirect("/")
 
-    print("######################")
-    print("######################")
-    print("user deleted")
-    print("######################")
-    print("######################")
+        return redirect("/")
 
     do_logout()
 
@@ -301,3 +280,141 @@ def delete_user():
     flash("Account deleted succesfully", "success")
 
     return redirect("/signup")
+
+
+@app.route('/delete_post/<int:post_id>', methods=["GET", "POST"])
+def delete_post(post_id):
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+
+        return redirect("/")
+
+    post = Post.query.get(post_id)
+    # Vote.query.filter_by(post_id=post_id).update({"post_id": None})
+    Vote.query.filter_by(post_id=post_id).delete()
+    db.session.delete(post)
+    db.session.commit()
+    flash("Post successfully delete", "success")
+
+    return redirect(f"/user_profile/{g.user.id}")
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+# CREATING API ENDPOINT TO ACCESS DATA VIA FRONTEND ~~~~~~~~~~~~~~~~~~~~~ #
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+
+@app.route('/create/userpost', methods=["GET", "POST"])
+def create_city_post():
+    place_url = request.json["placeUrl"]
+    title = request.json['title']
+    content = request.json['content']
+
+    if request.method == "POST":
+
+        post = Post(title=title, content=content,
+                    place_city_url=place_url, user_id=g.user.id)
+        db.session.add(post)
+        db.session.commit()
+        resp = jsonify(post=post.serialize())
+        return (resp, 201)
+
+
+@app.route('/<int:post_id>', methods=['GET'])
+def get_city_posts(post_id):
+
+    post = Post.query.get_or_404(post_id)
+
+    print("########################")
+    print(post.title)
+    print(post.content)
+    print("########################")
+
+    post_dict = {
+        "id": post.id,
+        "title": post.title,
+        "content": post.content,
+        "place_city_url": post.place_city_url,
+        "user_id": post.user_id,
+        "created_at": post.created_at.isoformat(),
+        "place": {
+            "city": post.place.city,
+            "state": post.place.state
+        },
+        "user": {
+            "id": post.user.id,
+            "username": post.user.username
+        },
+        "num_votes": post.num_votes
+    }
+
+    return jsonify(post=post_dict)
+
+
+@app.route('/post/upvote', methods=["POST"])
+def handle_vote_post_req():
+    post_id = request.json["postId"]
+
+    user = g.user
+    post = Post.query.get_or_404(post_id)
+
+    # if the post is in user's likes then remove the "like"
+    if post in user.votes:
+        user.votes.remove(post)
+        db.session.commit()
+        vote_count = len(post.votes)
+        data = {"success": True, "message": "vote removed",
+                "upvotes": vote_count}, 200
+        return jsonify(data)
+
+    # else like the post
+    user.votes.append(post)
+    db.session.commit()
+    vote_count = len(post.votes)
+    data = {"success": True, "message": "post upvoted",
+            "upvotes": vote_count}, 200
+    return jsonify(data)
+
+
+@app.route('/get/upvote', methods=['GET'])
+def handle_vote_get_req():
+    post_id = request.args.get("postId")
+    post = Post.query.get_or_404(post_id)
+
+    vote_count = len(post.votes)
+
+    data = {"upvotes": vote_count}, 200
+    return jsonify(data)
+
+
+@app.route('/get_crime_data', methods=["GET"])
+def get_crimes():
+    crimes = session.get('crimes')
+    city = session.get("city")
+    ai_resp = generate_ai_response(crimes, city)
+
+    print("##########################")
+    print("##########################")
+    print("##########################")
+    print(crimes)
+    print("##########################")
+    print("##########################")
+    print("##########################")
+
+    if crimes:
+        session.pop("crimes")
+        session.pop("city")
+        return jsonify(data=ai_resp)
+
+    print("##########################")
+    print("##########################")
+    print("##########################")
+    print(crimes)
+    print("##########################")
+    print("##########################")
+    print("##########################")
+
+    return jsonify({'error': 'Crime data not found in session'})
