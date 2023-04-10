@@ -12,7 +12,6 @@ async function createUserPost(placeUrl, title, content) {
 async function getUserPost(postId) {
   const response = await axios.get(`/${postId}`);
 
-  console.log(response);
   const {
     id,
     title,
@@ -32,9 +31,7 @@ async function getUserPost(postId) {
           <p>${place.city} ${place.state}</p>
           <div class="flex items-center mb-2">
             <p "number-votes-${id}" class="text-gray-600">${num_votes}</p>
-            <form method="POST" class="vote-form">
-            <input type="hidden" id="vote-id" name="vote-id" value="${id}">
-             <button id="vote-form-button"><svg
+             <button type="submit" id="users-post"><svg
           stroke="currentColor"
           fill="currentColor"
           stroke-width="0"
@@ -57,18 +54,13 @@ async function getUserPost(postId) {
             fill-rule="evenodd"
             d="M8 12a.5.5 0 00.5-.5v-6a.5.5 0 00-1 0v6a.5.5 0 00.5.5z"
             clip-rule="evenodd"
-          ></path></svg
-      ></button>
-            </form>
+          ></path></svg>
           </div>
         </div>`;
   $("#user-post-container").prepend(newPost);
 }
 
 async function postUpvote(data) {
-  console.log("#######################");
-  console.log(data, "data line 70");
-  console.log("#######################");
   const resp = await axios.post("/post/upvote", data);
   console.log(resp);
 }
@@ -78,6 +70,16 @@ async function getUpvote(data) {
   $(`#number-votes-${data["postId"]}`).text(`${resp.data[0]["upvotes"]}`);
   console.log(resp);
 }
+
+$(".vote-form").on("submit", async function (e) {
+  e.preventDefault();
+
+  const form = $(this).closest("form");
+  const postId = form.find("input[name='vote-id']").val();
+
+  await postUpvote({ postId: postId });
+  await getUpvote({ postId: postId });
+});
 
 $("#create_post_for_city").on("submit", async function (e) {
   e.preventDefault();
@@ -89,20 +91,7 @@ $("#create_post_for_city").on("submit", async function (e) {
   await createUserPost(placeUrl, title, content);
 });
 
-// Get all the vote forms on the page
-$(".vote-form button").on("click", async function (e) {
-  e.preventDefault();
-
-  const form = $(this).closest("form");
-  const postId = form.find("input[name='vote-id']").val();
-
-  await postUpvote({ postId: postId });
-  await getUpvote({ postId: postId });
-});
-
 $("#city-form").on("submit", async function (event) {
-  // event.preventDefault();
-
   const cityInput = $("#city-input").val();
   const stateInput = $("#state-input").val();
   console.log(cityInput);
@@ -111,15 +100,28 @@ $("#city-form").on("submit", async function (event) {
 });
 
 async function fetchDataWithDelay() {
-  // add a one second delay
-  const response = await axios.get("/get_crime_data");
-  console.log(response);
+  const placeUrl = $("#place-url").val();
+  const storageKey = `crimeData_${placeUrl}`;
 
-  $("#ai-response").text(`${response.data["data"]}`);
-  // Do something with the retrieved data here
+  const storedData = localStorage.getItem(storageKey);
+
+  if (storedData) {
+    const parsedData = JSON.parse(storedData);
+    $("#ai-response").append(`<p>${parsedData}</p>`);
+  } else {
+    const response = await axios.get("/get_crime_data");
+    const responseData = response.data["data"];
+
+    localStorage.setItem(storageKey, JSON.stringify(responseData));
+
+    $("#ai-response").append(`<p>${responseData}</p>`);
+  }
 }
 
-$("#city-form").on("click"),
-  setTimeout(() => {
-    fetchDataWithDelay();
-  }, 2000);
+const placeUrl = $("#place-url").val();
+if (
+  (window.location.href.includes(placeUrl) && placeUrl !== null) ||
+  undefined
+) {
+  fetchDataWithDelay();
+}

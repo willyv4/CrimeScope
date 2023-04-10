@@ -3,7 +3,7 @@ from turtle import pos
 from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
 from sqlalchemy.exc import IntegrityError
 from models import User, Post, Place, Vote, connect_db, db
-from forms import CityPostForm, CitySearchForm, EditUserForm, LoginForm, UserAddForm
+from forms import CitySearchForm, EditUserForm, LoginForm, UserAddForm
 from openAI_api import generate_ai_response
 from places_api import get_city_url, get_crime_data
 from sqlalchemy import desc, func
@@ -93,7 +93,7 @@ def signup():
             return render_template('users/signup.html', form=form)
 
         do_login(user)
-
+        flash(f"Welcome back {user.username}")
         return redirect("/")
     else:
         return render_template('users/signup.html', form=form)
@@ -147,10 +147,6 @@ def homepage():
             place = f"{city} {state}"
             place_url, place_type = get_city_url(place)
 
-            # create fake vars for testing
-            # place_url = "atlanta-fulton-ga"
-            # place_type = "Town"
-
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
                 return redirect(f'/{place_url}/{place_type}/{city}')
@@ -180,35 +176,9 @@ def show_crime_data(place_url, place_type, city):
 
         return redirect("/")
 
-    # place_url = "atlanta-fulton-ga"
-    # place_type = place_type
-    # city = city
-        # crime_data = {
-    #     'Violent Crimes': {
-    #         'Assault': {'value': 664.72, 'national': 282.69},
-    #         'Murder': {'value': 30.5, 'national': 6.08},
-    #         'Rape': {'value': 28.78, 'national': 40.68},
-    #         'Robbery': {'value': 160.18, 'national': 135.53}
-    #     },
-    #     'Property Crimes': {
-    #         'Burglary': {'value': 324.01, 'national': 500.13},
-    #         'Theft': {'value': 2737.91, 'national': 2042.79},
-    #         'Motor Vehicle Theft': {'value': 666.79, 'national': 284.04}
-    #     }
-    # }
-
-    # crime_data_json = json.dumps(crime_data)
-    # ai_resp_url = f"http://127.0.0.1:5000/ai_resp/{city}"
-    # response = requests.post(
-    #     ai_resp_url, json=crime_data_json)
-    # print(response)
-
     time.sleep(1)
     crime_data = get_crime_data(place_url, place_type)
 
-    # ai_resp = generate_ai_response(crime_data, place_type, city)
-
-    # structure api data dynamically for prompt
     crimes = crime_data['crime-safety']
 
     session["crimes"] = crimes
@@ -291,7 +261,6 @@ def delete_post(post_id):
         return redirect("/")
 
     post = Post.query.get(post_id)
-    # Vote.query.filter_by(post_id=post_id).update({"post_id": None})
     Vote.query.filter_by(post_id=post_id).delete()
     db.session.delete(post)
     db.session.commit()
@@ -302,7 +271,7 @@ def delete_post(post_id):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-# CREATING API ENDPOINT TO ACCESS DATA VIA FRONTEND ~~~~~~~~~~~~~~~~~~~~~ #
+# API ENDPOINTS TO ACCESS DATA VIA FRONTEND ~~~~~~~~~~~~~~~~~~~~~ #
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -327,11 +296,6 @@ def create_city_post():
 def get_city_posts(post_id):
 
     post = Post.query.get_or_404(post_id)
-
-    print("########################")
-    print(post.title)
-    print(post.content)
-    print("########################")
 
     post_dict = {
         "id": post.id,
@@ -361,6 +325,10 @@ def handle_vote_post_req():
     user = g.user
     post = Post.query.get_or_404(post_id)
 
+    if post.user_id == g.user.id:
+        data = {"error": "User can't like their own post"}, 200
+        return jsonify(data)
+
     # if the post is in user's likes then remove the "like"
     if post in user.votes:
         user.votes.remove(post)
@@ -376,6 +344,7 @@ def handle_vote_post_req():
     vote_count = len(post.votes)
     data = {"success": True, "message": "post upvoted",
             "upvotes": vote_count}, 200
+
     return jsonify(data)
 
 
@@ -396,25 +365,9 @@ def get_crimes():
     city = session.get("city")
     ai_resp = generate_ai_response(crimes, city)
 
-    print("##########################")
-    print("##########################")
-    print("##########################")
-    print(crimes)
-    print("##########################")
-    print("##########################")
-    print("##########################")
-
     if crimes:
         session.pop("crimes")
         session.pop("city")
         return jsonify(data=ai_resp)
-
-    print("##########################")
-    print("##########################")
-    print("##########################")
-    print(crimes)
-    print("##########################")
-    print("##########################")
-    print("##########################")
 
     return jsonify({'error': 'Crime data not found in session'})

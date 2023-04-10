@@ -44,12 +44,3 @@ def get_crime_data(place, place_type):
     place_data = json.loads(response2.text)
 
     return place_data
-
-
-# city = "new york"
-# place, place_type = get_city_url(city)
-
-# time.sleep(1)
-# crime_data = get_crime_data(place, place_type)
-
-# generate_ai_response(crime_data, place, city)
