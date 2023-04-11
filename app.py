@@ -93,6 +93,7 @@ def signup():
             return render_template('users/signup.html', form=form)
 
         do_login(user)
+
         flash(f"Welcome back {user.username}")
         return redirect("/")
     else:
