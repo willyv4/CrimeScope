@@ -290,6 +290,7 @@ def create_city_post():
         db.session.add(post)
         db.session.commit()
         resp = jsonify(post=post.serialize())
+        flash("Post created", "success")
         return (resp, 201)
 
 
