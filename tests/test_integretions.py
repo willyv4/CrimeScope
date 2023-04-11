@@ -39,9 +39,9 @@ class UserViews(TestCase):
             state='GA',
         )
         place2 = Place(
-            city_url='new-york-ny',
-            city='New York',
-            state='NY',
+            city_url='griffin-spalding-ga',
+            city='griffin',
+            state='GA',
         )
         db.session.add_all([place1, place2])
         db.session.commit()
@@ -117,3 +117,47 @@ class UserViews(TestCase):
         self.assertNotIn(b"This is a test post", resp.data)
         post = Post.query.get(3)
         self.assertIsNone(post)
+
+    def test_search_city_interact_w_posts(self):
+
+        # Log in as a user
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess[CURR_USER_KEY] = self.user1.id
+
+        resp = c.get("/griffin-spalding-ga/Town/griffin")
+        self.assertEqual(resp.status_code, 200)
+
+        self.assertIn(
+            b'<h2 class="text-2xl font-bold mb-4">Property Crime Rates</h2>', resp.data)
+        self.assertIn(
+            b'<h2 class="text-2xl font-bold mb-4">Violent Crime Rates</h2>', resp.data)
+
+        # upvote user post
+
+        post_id = {
+            "postId": 2
+        }
+
+        resp = c.post('post/upvote', json=post_id)
+        self.assertEqual(resp.status_code, 200)
+        data = resp.get_json()
+        self.assertTrue(data[0]['success'])
+        self.assertEqual(data[0]['message'], 'post upvoted')
+        self.assertEqual(data[0]['upvotes'], 1)
+
+        user = User.query.get(self.user1.id)
+        self.assertEqual(len(user.votes), 1)
+        self.assertEqual(user.votes[0].id, 2)
+
+        # Try to like the same post again
+        resp = c.post('post/upvote', json=post_id)
+        self.assertEqual(resp.status_code, 200)
+        data = resp.get_json()
+        self.assertTrue(data[0]['success'])
+        self.assertEqual(data[0]['message'], 'vote removed')
+        self.assertEqual(data[0]['upvotes'], 0)
+
+        # Check that the user's like was removed
+        user = User.query.get(self.user1.id)
+        self.assertEqual(len(user.votes), 0)
