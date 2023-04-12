@@ -9,7 +9,6 @@ from places_api import get_city_url, get_crime_data
 from sqlalchemy import desc, func
 import os
 import time
-import json
 
 
 CURR_USER_KEY = "curr_user"
@@ -166,7 +165,7 @@ def homepage():
 
         return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type)
     else:
-        return render_template('home-anon.html')
+        return redirect("/signup")
 
 
 @app.route('/<place_url>/<place_type>/<city>', methods=["GET", "POST"])
