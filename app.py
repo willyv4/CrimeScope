@@ -1,5 +1,3 @@
-import requests
-from turtle import pos
 from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
 from sqlalchemy.exc import IntegrityError
 from models import User, Post, Place, Vote, connect_db, db
@@ -144,12 +142,12 @@ def homepage():
         if form.validate_on_submit():
             city = form.city.data
             state = form.state.data
-            place = f"{city} {state}"
-            place_url, place_type = get_city_url(place)
+            city_state = city.capitalize() + " " + state
+            place_url, place_type = get_city_url(city_state)
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
-                return redirect(f'/{place_url}/{place_type}/{city}')
+                return redirect(f'/{place_url}/{place_type}/{city_state}')
             else:
                 if place_url:
                     place = Place(city_url=place_url, city=city, state=state)
@@ -157,7 +155,7 @@ def homepage():
                     db.session.commit()
 
                     time.sleep(1)
-                    return redirect(f'/{place_url}/{place_type}/{city}')
+                    return redirect(f'/{place_url}/{place_type}/{city_state}')
                 else:
                     print("cant find place!")
                     flash(
@@ -184,14 +182,17 @@ def show_crime_data(place_url, place_type, city):
     session["crimes"] = crimes
     session["city"] = city
 
-    # extract and compare violent crime data
     violent_crime_list = []
     violent_crimes = crimes['Violent Crimes']
+
     for crime_name, crime_values in violent_crimes.items():
         crime_value = crime_values['value']
         national_crime = crime_values['national']
-        violent_crime_list.append(
-            f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
+        violent_crime_list.append({
+            'crime': crime_name,
+            'city': crime_value,
+            'national': national_crime
+        })
 
     # extract and compare property crime data
     property_crime_list = []
@@ -199,8 +200,11 @@ def show_crime_data(place_url, place_type, city):
     for crime_name, crime_values in property_crimes.items():
         crime_value = crime_values['value']
         national_crime = crime_values['national']
-        property_crime_list.append(
-            f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
+        property_crime_list.append({
+            "crime": crime_name,
+            "city": crime_value,
+            "national": national_crime
+        })
 
     posts = Post.query.filter_by(place_city_url=place_url).\
         outerjoin(Vote).group_by(Post.id).\
@@ -327,7 +331,9 @@ def handle_vote_post_req():
     post = Post.query.get_or_404(post_id)
 
     if post.user_id == g.user.id:
-        data = {"error": "User can't like their own post"}, 200
+        data = {"message": "User can't like their own post",
+                "class": "bg-gray-200 rounded"}, 200
+
         return jsonify(data)
 
     # if the post is in user's likes then remove the "like"
@@ -335,16 +341,17 @@ def handle_vote_post_req():
         user.votes.remove(post)
         db.session.commit()
         vote_count = len(post.votes)
-        data = {"success": True, "message": "vote removed",
-                "upvotes": vote_count}, 200
+        data = {"success": True, "message": "Vote removed",
+                "upvotes": vote_count, "class": "bg-gray-300 rounded"}, 200
+
         return jsonify(data)
 
     # else like the post
     user.votes.append(post)
     db.session.commit()
     vote_count = len(post.votes)
-    data = {"success": True, "message": "post upvoted",
-            "upvotes": vote_count}, 200
+    data = {"success": True, "message": "Post upvoted",
+            "upvotes": vote_count, "class": "bg-green-300 rounded"}, 200
 
     return jsonify(data)
 
@@ -364,11 +371,37 @@ def handle_vote_get_req():
 def get_crimes():
     crimes = session.get('crimes')
     city = session.get("city")
+
+    # Check if there is new crime data and city information in the query string
+    new_crimes = request.args.get("crimes")
+    new_city = request.args.get("city")
+    if new_crimes and new_city:
+        crimes = new_crimes
+        city = new_city
+        session['crimes'] = crimes
+        session['city'] = city
+
     ai_resp = generate_ai_response(crimes, city)
 
     if crimes:
-        session.pop("crimes")
-        session.pop("city")
+        # Only pop the old data if there is new data in the query string
+        if new_crimes and new_city:
+            session.pop("crimes")
+            session.pop("city")
         return jsonify(data=ai_resp)
 
     return jsonify({'error': 'Crime data not found in session'})
+
+
+# @app.route('/get_crime_data', methods=["GET"])
+# def get_crimes():
+#     crimes = session.get('crimes')
+#     city = session.get("city")
+#     ai_resp = generate_ai_response(crimes, city)
+
+#     if crimes:
+#         session.pop("crimes")
+#         session.pop("city")
+#         return jsonify(data=ai_resp)
+
+#     return jsonify({'error': 'Crime data not found in session'})

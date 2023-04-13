@@ -29,7 +29,9 @@
           <li id="flash-container">
             {% for category, message in
             get_flashed_messages(with_categories=True) %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
+            <div id="flashed-messages" class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
             {% endfor %}
           </li>
           <li>

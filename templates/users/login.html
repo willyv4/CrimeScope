@@ -10,16 +10,15 @@
 </video>
 
 <div
-  class="fixed inset-0 flex flex-wrap md:flex-no-wrap justify-center items-center h-screen bg-gradient-to-tr from-black"
+  class="fixed inset-0 flex flex-wrap lg:flex-no-wrap justify-center items-center h-screen bg-gradient-to-tr from-black"
 >
   <div
-    class="w-full md:w-1/2 justify-center items-center text-gray-50 font-bold text-6xl max-w-md mx-auto"
+    class="w-full lg:w-1/2 justify-center items-center text-gray-50 font-bold text-5xl max-w-md h-60 mx-auto mt-20"
   >
     <p id="phrase-container"></p>
   </div>
-  <div class="w-full md:w-1/2 justify-center items-center">
+  <div class="w-full lg:w-1/2 justify-center items-center mt-20">
     <form method="POST" id="login_account_form" class="max-w-md mx-auto">
-      <h1 class="text-green-300 text-center font-bold text-3xl">Log in</h1>
       {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
       'hidden' %}
       <div class="mb-4">

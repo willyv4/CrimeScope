@@ -62,13 +62,23 @@ async function getUserPost(postId) {
 
 async function postUpvote(data) {
   const resp = await axios.post("/post/upvote", data);
-  console.log(resp);
+  const voteClass = resp.data[0]["class"];
+  const message = resp.data[0]["message"];
+  console.log(message);
+
+  $("#vote-form-button").removeClass().addClass(voteClass);
+  $("#flash-container").empty();
+  $("#flash-container").append(message).fadeIn();
+  if ($("#flash-container").length !== 0) {
+    setTimeout(() => {
+      $("#flash-container").fadeOut();
+    }, 2000);
+  }
 }
 
 async function getUpvote(data) {
   const resp = await axios.get(`/get/upvote`, { params: data });
   $(`#number-votes-${data["postId"]}`).text(`${resp.data[0]["upvotes"]}`);
-  console.log(resp);
 }
 
 $(".vote-form").on("submit", async function (e) {
@@ -89,6 +99,7 @@ $("#create_post_for_city").on("submit", async function (e) {
   const placeUrl = $("#place-url").val();
   const city = $("#city_name").val();
   await createUserPost(placeUrl, title, content);
+  $("#create_post_for_city")[0].reset();
 });
 
 $("#city-form").on("submit", async function (event) {
@@ -117,6 +128,21 @@ async function fetchDataWithDelay() {
     $("#ai-response").append(`<p>${responseData}</p>`);
   }
 }
+
+async function genNewResp() {
+  const response = await axios.get("/get_crime_data");
+  const responseData = response.data["data"];
+  $("#ai-response").append(`<p>${responseData}</p>`);
+}
+
+$("#generate-ai-resp").click(function () {
+  console.log("hello");
+
+  // Remove the existing response
+  $("#ai-response").empty();
+  // Call the function again to regenerate the response
+  genNewResp();
+});
 
 const placeUrl = $("#place-url").val();
 if (

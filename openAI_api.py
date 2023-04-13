@@ -36,11 +36,13 @@ def generate_ai_response(crime_data, city):
     Property Crimes:
     {property_crime_list}
 
-    Provide a simple summary about {city}'s crime and illustrate the likelihood of crime victimization as a percentage.
+    Provide a useful summary about {city}'s crime and illustrate the likelihood of crime victimization as a percentage.
 
     If there is crime related dangerous areas within {city} name the top 3 and explain why and provide 3 safety tips in this {city}.
 
-    If not explain 3 ways to safe in {city} and it's surrounding areas in terms of weather and wildlife.
+    If not explain why {city} is safe.
+
+    format your repsonse with.
     """
 
     # Set up the chat API parameters

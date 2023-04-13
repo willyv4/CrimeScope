@@ -11,23 +11,20 @@
 </video>
 
 <div
-  class="fixed inset-0 flex flex-wrap md:flex-no-wrap justify-center items-center h-screen bg-gradient-to-tr from-black"
+  class="fixed inset-0 flex flex-wrap lg:flex-no-wrap justify-center items-center h-screen bg-gradient-to-tr from-black"
 >
   <div
-    class="w-full md:w-1/2 justify-center items-center text-gray-50 font-bold text-5xl max-w-md mx-auto"
+    class="w-full lg:w-1/2 justify-center items-center text-gray-50 font-bold text-5xl max-w-md h-60 mx-auto mt-20"
   >
     <p id="phrase-container"></p>
   </div>
-  <div class="w-full md:w-1/2 justify-center items-center">
+  <div class="w-full lg:w-1/2 justify-center items-center mt-20">
     <form method="POST" id="create_account_form" class="max-w-md mx-auto">
-      <h1 class="text-green-200 text-center font-bold text-3xl">
-        Create Account
-      </h1>
       {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
       'hidden' %}
       <div class="mb-4">
         <label
-          class="block text-green-200 font-bold mb-2"
+          class="block text-green-300 font-bold mb-2"
           for="{{ field.id_for_label }}"
         >
           {{ field.label }}
@@ -55,7 +52,7 @@
       <button
         class="w-full bg-green-400 hover:bg-green-500 text-white py-3 rounded-md transition duration-300 ease-in-out"
       >
-        Create Account
+        Log in
       </button>
     </form>
   </div>

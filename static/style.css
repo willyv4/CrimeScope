@@ -22,3 +22,9 @@ video {
 		transform: scale(3.0);
 	}
 }
+
+/* table {
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: 10px;
+} */
