@@ -120,10 +120,20 @@ async function fetchDataWithDelay() {
     const parsedData = JSON.parse(storedData);
     $("#ai-response").append(`<p>${parsedData}</p>`);
   } else {
+    $("#ai-response").append(`
+      <div id="loading-spinner" class="flex justify-center items-center h-24">
+        <svg class="animate-spin h-6 w-6 text-gray-600" viewBox="0 0 24 24"></svg>
+        <span class="ml-3 text-gray-600">Loading...</span>
+      </div>
+    `);
+
     const response = await axios.get("/get_crime_data");
     const responseData = response.data["data"];
 
     localStorage.setItem(storageKey, JSON.stringify(responseData));
+
+    // Remove the loading spinner
+    $("#loading-spinner").remove();
 
     $("#ai-response").append(`<p>${responseData}</p>`);
   }
@@ -137,7 +147,6 @@ async function genNewResp() {
 
 $("#generate-ai-resp").click(function () {
   console.log("hello");
-
   // Remove the existing response
   $("#ai-response").empty();
   // Call the function again to regenerate the response

@@ -28,27 +28,27 @@ def generate_ai_response(crime_data, city):
 
     # Set up the crime data prompt
     prompt = f"""
-    Crime data for the city of {city}
+    Crime data for the city of {city}.
 
     Violent Crimes:
-    {violent_crime_list}
+    {violent_crime_list}.
 
     Property Crimes:
-    {property_crime_list}
+    {property_crime_list}.
 
-    Provide a useful summary about {city}'s crime and illustrate the likelihood of crime victimization as a percentage.
+    Explain the summary of violent and property crimes for {city}'s crime. Provide percentages of the differences between the national and {city}'s crime rates.
 
-    If there is crime related dangerous areas within {city} name the top 3 and explain why and provide 3 safety tips in this {city}.
+    Share the three most dangerous areas within {city} and explain why they are dangerous.
 
-    If not explain why {city} is safe.
+    Provide safety tips specific to the most common crime rates within {city} and its most dangerous areas. Explain how these safety tips relate to the most common crime rates.
 
-    format your repsonse with.
+    Format your response text with HTML and Tailwind CSS.
     """
 
     # Set up the chat API parameters
     model = "text-davinci-003"
-    temperature = .75
-    max_tokens = 750
+    temperature = .7
+    max_tokens = 950
 
     # Call the chat API to generate a response
     response = openai.Completion.create(

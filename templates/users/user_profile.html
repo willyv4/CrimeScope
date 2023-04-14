@@ -1,27 +1,42 @@
 {% extends 'base.html' %} {% block content %}
-
-<div class="">
-  <h3>Your posts</h3>
-  <div id="user-post-container" class="grid grid-cols-1 gap-4">
-    {% for post in posts %}
-    <div class="p-4 border rounded-lg shadow-md">
-      <h3 class="text-lg font-medium mb-2">{{post.title}}</h3>
-      <p class="text-gray-600 mb-4">{{post.content}}</p>
-      <p class="text-gray-600 mb-2">Created by: {{post.user.username}}</p>
-      <div class="flex items-center mb-2">
-        <p id="number-votes" class="text-gray-600">
-          upvotes: {{post.num_votes}}
-        </p>
+<br>
+<br>
+<br>
+    <div
+      id="user-post-container"
+      class="flex flex-col w-1/2 gap-8 h-1/3 overflow-auto p-4 shadow-inner rounded"
+    >
+      <h3 class="font-bold text-2xl text-center">Your posts</h3>
+      {% for post in posts %}
+      <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50">
+        <div class="p-4">
+          <div class="flex justify-between">
+            <h3 class="text-lg font-medium mb-4">{{post.title}}</h3>
+            <span class="text-gray-600"
+              >Created by: {{post.user.username}}</span
+            >
+          </div>
+          <p class="text-gray-600 bg-white mb-4 p-4 shadow-inner rounded">
+            {{post.content}}
+          </p>
+          <div class="flex bg-gray-100 p-1 rounded items-center justify-center ">
+            <span class="w-11/12 mt-2 ml-2">
+              {{post.place.city}} {{post.place.state}}
+            </span>
+            <p id="number-votes-{{post.id}}" class="text-gray-600 w-32">
+             upvotes: {{post.num_votes}}
+            </p>
 
         <a href="/delete_post/{{post.id}}">
           <svg
             stroke="currentColor"
             fill="currentColor"
-            stroke-width="0"
+            stroke-width=".5"
             viewBox="0 0 16 16"
             height="1em"
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
+            class="text-red-700"
           >
             <path
               d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"
@@ -33,14 +48,14 @@
             ></path>
           </svg>
         </a>
+            
+          </div>
+        </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
-</div>
 
-<br />
-<br />
 
 <form
   id="city-form"
