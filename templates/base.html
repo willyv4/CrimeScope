@@ -26,7 +26,10 @@
             />
             <a href="/" class="text-2xl font-bold">CrimeScope</a>
           </li>
-          <li id="flash-container">
+          <li
+            id="flash-container"
+            class="absolute top-16 md:top-5 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-300 text-black text-shadow underline"
+          >
             {% for category, message in
             get_flashed_messages(with_categories=True) %}
             <div id="flashed-messages" class="alert alert-{{ category }}">

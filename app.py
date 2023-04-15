@@ -158,8 +158,7 @@ def homepage():
                     return redirect(f'/{place_url}/{place_type}/{city_state}')
                 else:
                     print("cant find place!")
-                    flash(
-                        "Whoops, looks like that search didn't work try something else", "danger")
+                    flash("Whoops there was an error. Try another search")
 
         return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type)
     else:
@@ -176,6 +175,10 @@ def show_crime_data(place_url, place_type, city):
 
     time.sleep(1)
     crime_data = get_crime_data(place_url, place_type)
+
+    if "error" in crime_data:
+        flash("Whoops there was an error. Try another search")
+        return redirect("/")
 
     crimes = crime_data['crime-safety']
 
@@ -293,7 +296,6 @@ def create_city_post():
         db.session.add(post)
         db.session.commit()
         resp = jsonify(post=post.serialize())
-        flash("Post created", "success")
         return (resp, 201)
 
 
@@ -391,17 +393,3 @@ def get_crimes():
         return jsonify(data=ai_resp)
 
     return jsonify({'error': 'Crime data not found in session'})
-
-
-# @app.route('/get_crime_data', methods=["GET"])
-# def get_crimes():
-#     crimes = session.get('crimes')
-#     city = session.get("city")
-#     ai_resp = generate_ai_response(crimes, city)
-
-#     if crimes:
-#         session.pop("crimes")
-#         session.pop("city")
-#         return jsonify(data=ai_resp)
-
-#     return jsonify({'error': 'Crime data not found in session'})

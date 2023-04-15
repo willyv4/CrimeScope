@@ -5,6 +5,14 @@ async function createUserPost(placeUrl, title, content) {
     placeUrl: placeUrl,
   });
 
+  $("#flash-container").empty();
+  $("#flash-container").append("Post created").fadeIn();
+  if ($("#flash-container").length !== 0) {
+    setTimeout(() => {
+      $("#flash-container").fadeOut();
+    }, 2000);
+  }
+
   postId = resp.data.post.id;
   await getUserPost(postId);
 }
@@ -24,47 +32,78 @@ async function getUserPost(postId) {
     num_votes,
   } = response.data.post;
 
-  const newPost = `<div class="p-4 border rounded-lg shadow-md">
-          <h3 class="text-gray-600 mb-2">Created by: ${user.username}</h3>
-          <h3 class="text-lg font-medium mb-2">${title}</h3>
-          <p class="text-gray-600 mb-4">${content}</p>
-          <p>${place.city} ${place.state}</p>
-          <div class="flex items-center mb-2">
-            <p "number-votes-${id}" class="text-gray-600">${num_votes}</p>
-             <button type="submit" id="users-post"><svg
-          stroke="currentColor"
-          fill="currentColor"
-          stroke-width="0"
-          viewBox="0 0 16 16"
-          height="1.5em"
-          width="1.5em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M4 1h8a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm0 1a1 1 0 00-1 1v10a1 1 0 001 1h8a1 1 0 001-1V3a1 1 0 00-1-1H4z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill-rule="evenodd"
-            d="M4.646 7.854a.5.5 0 00.708 0L8 5.207l2.646 2.647a.5.5 0 00.708-.708l-3-3a.5.5 0 00-.708 0l-3 3a.5.5 0 000 .708z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill-rule="evenodd"
-            d="M8 12a.5.5 0 00.5-.5v-6a.5.5 0 00-1 0v6a.5.5 0 00.5.5z"
-            clip-rule="evenodd"
-          ></path></svg>
+  const newPost = `      
+      <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50">
+        <div class="p-4">
+          <div class="flex justify-between">
+            <h3 class="text-lg font-medium mb-4">${title}</h3>
+            <span class="text-gray-600"
+              >Created by: ${user.username}</span
+            >
           </div>
-        </div>`;
+          <p class="text-gray-600 bg-white mb-4 p-4 shadow-inner rounded">
+            ${content}
+          </p>
+          <div class="flex bg-gray-100 p-1 rounded">
+            <span class="w-11/12 mt-2 ml-2">
+              ${place.city}, ${place.state}
+            </span>
+            <p id="number-votes-${id}" class="text-gray-600 mt-2 w-4">
+              ${num_votes}
+            </p>
+            <div class="vote-form mt-2 ml-2 mr-2 w-4">
+              <button
+                type="submit"
+                id="vote-form-button"
+                class="bg-gray-300 rounded"
+              >
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width=".5"
+                  viewBox="0 0 16 16"
+                  height="1.5em"
+                  width="1.5em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4 1h8a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm0 1a1 1 0 00-1 1v10a1 1 0 001 1h8a1 1 0 001-1V3a1 1 0 00-1-1H4z"
+                    clip-rule="evenodd"
+                  ></path>
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.646 7.854a.5.5 0 00.708 0L8 5.207l2.646 2.647a.5.5 0 00.708-.708l-3-3a.5.5 0 00-.708 0l-3 3a.5.5 0 000 .708z"
+                    clip-rule="evenodd"
+                  ></path>
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 12a.5.5 0 00.5-.5v-6a.5.5 0 00-1 0v6a.5.5 0 00.5.5z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+              </div>
+          </div>
+        </div>
+      </div>`;
   $("#user-post-container").prepend(newPost);
 }
+
+$("#vote-form-button").on("click", () => {
+  $("#flash-container").empty();
+  $("#flash-container").append("You can't like your own message").fadeIn();
+  if ($("#flash-container").length !== 0) {
+    setTimeout(() => {
+      $("#flash-container").fadeOut();
+    }, 2000);
+  }
+});
 
 async function postUpvote(data) {
   const resp = await axios.post("/post/upvote", data);
   const voteClass = resp.data[0]["class"];
   const message = resp.data[0]["message"];
-  console.log(message);
 
   $("#vote-form-button").removeClass().addClass(voteClass);
   $("#flash-container").empty();
@@ -100,6 +139,7 @@ $("#create_post_for_city").on("submit", async function (e) {
   const city = $("#city_name").val();
   await createUserPost(placeUrl, title, content);
   $("#create_post_for_city")[0].reset();
+  $("#no-post-content").remove();
 });
 
 $("#city-form").on("submit", async function (event) {
@@ -120,10 +160,9 @@ async function fetchDataWithDelay() {
     const parsedData = JSON.parse(storedData);
     $("#ai-response").append(`<p>${parsedData}</p>`);
   } else {
-    $("#ai-response").append(`
-      <div id="loading-spinner" class="flex justify-center items-center h-24">
-        <svg class="animate-spin h-6 w-6 text-gray-600" viewBox="0 0 24 24"></svg>
-        <span class="ml-3 text-gray-600">Loading...</span>
+    $("#ai-response").html(`
+      <div id="loading" class="flex mt-32 justify-center items-center">
+        <div class="border-t-4 border-b-4 border-gray-400 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     `);
 
@@ -133,7 +172,7 @@ async function fetchDataWithDelay() {
     localStorage.setItem(storageKey, JSON.stringify(responseData));
 
     // Remove the loading spinner
-    $("#loading-spinner").remove();
+    $("#loading").remove();
 
     $("#ai-response").append(`<p>${responseData}</p>`);
   }
@@ -142,13 +181,23 @@ async function fetchDataWithDelay() {
 async function genNewResp() {
   const response = await axios.get("/get_crime_data");
   const responseData = response.data["data"];
-  $("#ai-response").append(`<p>${responseData}</p>`);
+  if (responseData) {
+    $("#loading").remove();
+    $("#ai-response").append(`<p>${responseData}</p>`);
+  }
 }
 
 $("#generate-ai-resp").click(function () {
   console.log("hello");
   // Remove the existing response
   $("#ai-response").empty();
+
+  $("#ai-response").html(`
+      <div id="loading" class="flex mt-32 justify-center items-center">
+        <div class="border-t-4 border-b-4 border-gray-400 rounded-full w-12 h-12 animate-spin"></div>
+      </div>
+    `);
+
   // Call the function again to regenerate the response
   genNewResp();
 });
@@ -160,3 +209,12 @@ if (
 ) {
   fetchDataWithDelay();
 }
+
+$("#toggle-delete-visibility").on("click", () => {
+  const delBtn = $("#account-delete-button");
+  delBtn.removeClass("hidden");
+
+  delBtn.on("click", () => {
+    delBtn.addClass("hidden");
+  });
+});

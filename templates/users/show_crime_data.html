@@ -16,9 +16,13 @@
         <tbody class="bg-white">
           {% for crime in v_crime %}
           <tr>
-            <td class="px-4 py-2 text-center">{{ crime.crime }}</td>
-            <td class="px-4 py-2 text-center">Rate: {{ crime.city }}</td>
-            <td class="px-4 py-2 text-center">Rate: {{ crime.national }}</td>
+            <td class="px-4 py-2 text-center font-bold">{{ crime.crime }}</td>
+            <td class="px-4 py-2 text-center font-bold">
+              Rate: {{ crime.city }}
+            </td>
+            <td class="px-4 py-2 text-center font-bold">
+              Rate: {{ crime.national }}
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -38,9 +42,13 @@
         <tbody class="bg-white">
           {% for crime in p_crime %}
           <tr>
-            <td class="px-4 py-2 text-center">{{ crime.crime }}</td>
-            <td class="px-4 py-2 text-center">Rate: {{ crime.city }}</td>
-            <td class="px-4 py-2 text-center">Rate: {{ crime.national }}</td>
+            <td class="px-4 py-2 text-center font-bold">{{ crime.crime }}</td>
+            <td class="px-4 py-2 text-center font-bold">
+              Rate: {{ crime.city }}
+            </td>
+            <td class="px-4 py-2 text-center font-bold">
+              Rate: {{ crime.national }}
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -67,10 +75,7 @@
           Generate new response
         </button>
       </div>
-      <div
-        id="ai-response"
-        class="px-6 py-8 overflow-y-auto shadow-inner bg-white flex-1"
-      ></div>
+      <div id="ai-response" class="px-6 py-8 overflow-y-auto flex-1"></div>
     </div>
   </div>
 
@@ -118,7 +123,7 @@
           type="submit"
           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
         >
-          Submit
+          Post a tip
         </button>
       </div>
     </form>
@@ -126,7 +131,7 @@
       id="user-post-container"
       class="flex flex-col gap-8 h-2/3 overflow-auto -mt-4 p-4 shadow-inner rounded"
     >
-      {% for post in posts %}
+      {% if posts %} {% for post in posts %}
       <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50">
         <div class="p-4">
           <div class="flex justify-between">
@@ -187,7 +192,17 @@
           </div>
         </div>
       </div>
-      {% endfor %}
+      {% endfor %} {% else %}
+      <h1 id="no-post-content" class="text-2xl font-bold ml-4">
+        No posts yet. Post a tip or story about {{city}}
+      </h1>
+      <img
+        id="no-post-content"
+        class="w-60 h-60 mx-auto my-auto opacity-10 filter drop-shadow-2xl"
+        src="/static/images/IMG_5090.png"
+        alt="cityscope"
+      />
+      {% endif %}
     </div>
   </div>
 </div>

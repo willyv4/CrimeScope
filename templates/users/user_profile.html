@@ -1,113 +1,125 @@
 {% extends 'base.html' %} {% block content %}
-<br>
-<br>
-<br>
-    <div
-      id="user-post-container"
-      class="flex flex-col w-1/2 gap-8 h-1/3 overflow-auto p-4 shadow-inner rounded"
-    >
-      <h3 class="font-bold text-2xl text-center">Your posts</h3>
-      {% for post in posts %}
-      <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50">
-        <div class="p-4">
-          <div class="flex justify-between">
-            <h3 class="text-lg font-medium mb-4">{{post.title}}</h3>
-            <span class="text-gray-600"
-              >Created by: {{post.user.username}}</span
-            >
-          </div>
-          <p class="text-gray-600 bg-white mb-4 p-4 shadow-inner rounded">
-            {{post.content}}
-          </p>
-          <div class="flex bg-gray-100 p-1 rounded items-center justify-center ">
-            <span class="w-11/12 mt-2 ml-2">
-              {{post.place.city}} {{post.place.state}}
-            </span>
-            <p id="number-votes-{{post.id}}" class="text-gray-600 w-32">
-             upvotes: {{post.num_votes}}
-            </p>
+<br />
+<br />
+<br />
 
-        <a href="/delete_post/{{post.id}}">
-          <svg
-            stroke="currentColor"
-            fill="currentColor"
-            stroke-width=".5"
-            viewBox="0 0 16 16"
-            height="1em"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-            class="text-red-700"
-          >
-            <path
-              d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"
-            ></path>
-            <path
-              fill-rule="evenodd"
-              d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-        </a>
-            
+<div class="mt-10 w-full h-full flex flex-col justify-center items-center">
+  <div class="w-3/4 p-6">
+    <form
+      id="city-form"
+      method="POST"
+      action="/user_profile/{{user_id}}"
+      class="w-full mx-auto bg-gray-200 p-8 rounded mb-4"
+    >
+      <h3 class="text-xl font-bold text-center">Edit username or email</h3>
+      {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
+      'hidden' %}
+
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 font-bold mb-2"
+          for="{{ field.id_for_label }}"
+        >
+          {{ field.label }}
+        </label>
+        <div class="relative">
+          {{ field(class="shadow appearance-none border rounded w-full py-2 px-3
+          text-gray-700 leading-tight focus:outline-none focus:shadow-outline")
+          }} {% for error in field.errors %}
+          <div class="absolute right-0 top-0 mt-2 mr-2">
+            <svg
+              class="fill-current h-4 w-4 text-red-500"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 0C4.476 0 0 4.476 0 10c0 5.523 4.476 10 10 10s10-4.477 10-10c0-5.524-4.476-10-10-10zm5.657 15.657l-1.414 1.414L10 11.414l-4.243 4.243-1.414-1.414L8.586 10 4.343 5.757l1.414-1.414L10 8.586l4.243-4.243 1.414 1.414L11.414 10l4.243 4.243z"
+              />
+            </svg>
+            <span class="text-red-500 text-xs">{{ error }}</span>
           </div>
+          {% endfor %}
         </div>
       </div>
+
       {% endfor %}
-    </div>
-  </div>
 
+      <button
+        type="submit"
+        class="w-full bg-green-400 mb-6 hover:bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Edit
+      </button>
+    </form>
 
-<form
-  id="city-form"
-  method="POST"
-  action="/user_profile/{{user_id}}"
-  class="w-full max-w-sm mx-auto"
->
-  <h3>Edit username or email</h3>
-  {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
-  'hidden' %}
-
-  <div class="mb-4">
-    <label
-      class="block text-gray-700 font-bold mb-2"
-      for="{{ field.id_for_label }}"
+    <button
+      id="toggle-delete-visibility"
+      class="w-full bg-red-400 mb-6 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
-      {{ field.label }}
-    </label>
-    <div class="relative">
-      {{ field(class="shadow appearance-none border rounded w-full py-2 px-3
-      text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
-      {% for error in field.errors %}
-      <div class="absolute right-0 top-0 mt-2 mr-2">
-        <svg
-          class="fill-current h-4 w-4 text-red-500"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M10 0C4.476 0 0 4.476 0 10c0 5.523 4.476 10 10 10s10-4.477 10-10c0-5.524-4.476-10-10-10zm5.657 15.657l-1.414 1.414L10 11.414l-4.243 4.243-1.414-1.414L8.586 10 4.343 5.757l1.414-1.414L10 8.586l4.243-4.243 1.414 1.414L11.414 10l4.243 4.243z"
-          />
-        </svg>
-        <span class="text-red-500 text-xs">{{ error }}</span>
+      Delete account
+    </button>
+
+    {% for post in posts %}
+    <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50 mb-4">
+      <div class="p-4">
+        <div class="flex justify-between">
+          <h3 class="text-lg font-medium mb-4">{{post.title}}</h3>
+          <span class="text-gray-600">Created by: {{post.user.username}}</span>
+        </div>
+        <p class="text-gray-600 bg-white mb-4 p-4 shadow-inner rounded">
+          {{post.content}}
+        </p>
+        <div class="flex bg-gray-100 p-1 rounded items-center justify-center">
+          <span class="w-11/12 mt-2 ml-2">
+            {{post.place.city}} {{post.place.state}}
+          </span>
+          <p id="number-votes-{{post.id}}" class="text-gray-600 w-32">
+            upvotes: {{post.num_votes}}
+          </p>
+
+          <a href="/delete_post/{{post.id}}">
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width=".5"
+              viewBox="0 0 16 16"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+              class="text-red-700"
+            >
+              <path
+                d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"
+              ></path>
+              <path
+                fill-rule="evenodd"
+                d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </a>
+        </div>
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
   </div>
+</div>
 
-  {% endfor %}
-
-  <button
-    type="submit"
-    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-  >
-    Submit edit
-  </button>
-</form>
-
-<a
-  href="/delete_account"
-  class="inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-  >Delete account</a
+<div
+  id="account-delete-button"
+  class="hidden fixed top-0 left-0 w-screen h-screen bg-gray-900 bg-opacity-60 flex justify-center items-center filter bg-blur-lg"
 >
+  <div class="bg-white rounded-lg p-8">
+    <h1 class="font-bold text-2xl mb-8">
+      Are you sure you want to delete your account?
+    </h1>
+    <a
+      href="/delete_account"
+      class="block bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Delete Account
+    </a>
+  </div>
+</div>
 
 {% endblock %}
