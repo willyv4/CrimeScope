@@ -19,16 +19,18 @@
       <div class="container mx-auto px-4">
         <ul class="flex justify-between">
           <li class="flex">
-            <img
-              src="/static/images/IMG_5090.PNG"
-              alt="fingerprint"
-              class="w-8 h-8 mr-4"
-            />
+            <a href="/">
+              <img
+                src="/static/images/IMG_5090.PNG"
+                alt="fingerprint"
+                class="w-8 h-8 mr-4"
+              />
+            </a>
             <a href="/" class="text-2xl font-bold">CrimeScope</a>
           </li>
           <li
             id="flash-container"
-            class="absolute top-16 md:top-5 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-300 text-black text-shadow underline"
+            class="absolute top-16 md:top-5 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-300 text-black text-shadow"
           >
             {% for category, message in
             get_flashed_messages(with_categories=True) %}
@@ -43,14 +45,14 @@
               <li>
                 <a
                   href="/signup"
-                  class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
                   >Create Account</a
                 >
               </li>
               <li>
                 <a
                   href="/login"
-                  class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
                   >Log in</a
                 >
               </li>
@@ -58,14 +60,14 @@
               <li>
                 <a
                   href="/user_profile/{{g.user.id}}"
-                  class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
                   >Your profile</a
                 >
               </li>
               <li>
                 <a
                   href="/logout"
-                  class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
                   >Log out</a
                 >
               </li>

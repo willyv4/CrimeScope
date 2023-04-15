@@ -6,9 +6,7 @@ openai.api_key = openai_api_key
 
 
 def generate_ai_response(crime_data, city):
-    # structure api data dynamically for prompt
 
-    # extract and compare violent crime data
     violent_crime_list = []
     violent_crimes = crime_data['Violent Crimes']
     for crime_name, crime_values in violent_crimes.items():
@@ -17,7 +15,6 @@ def generate_ai_response(crime_data, city):
         violent_crime_list.append(
             f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
 
-    # extract and compare property crime data
     property_crime_list = []
     property_crimes = crime_data['Property Crimes']
     for crime_name, crime_values in property_crimes.items():
@@ -26,7 +23,6 @@ def generate_ai_response(crime_data, city):
         property_crime_list.append(
             f"{crime_name} index of {crime_value} compared to the national average of {national_crime}")
 
-    # Set up the crime data prompt
     prompt = f"""
     Crime data for the city of {city}.
 
@@ -51,12 +47,6 @@ def generate_ai_response(crime_data, city):
     safety tips specific to area and crime (numbered)
     """
 
-    # # Set up the chat API parameters
-    # model = "gpt-3.5-turbo"
-    # temperature = .7
-    # max_tokens = 950
-
-    # Call the chat API to generate a response
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         temperature=.5,

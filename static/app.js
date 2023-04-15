@@ -46,14 +46,13 @@ async function getUserPost(postId) {
           </p>
           <div class="flex bg-gray-100 p-1 rounded">
             <span class="w-11/12 mt-2 ml-2">
-              ${place.city}, ${place.state}
+              ${place.city} ${place.state}
             </span>
             <p id="number-votes-${id}" class="text-gray-600 mt-2 w-4">
               ${num_votes}
             </p>
-            <div class="vote-form mt-2 ml-2 mr-2 w-4">
+            <div id="div-vote-button" class="vote-form mt-2 ml-2 mr-2 w-4">
               <button
-                type="submit"
                 id="vote-form-button"
                 class="bg-gray-300 rounded"
               >
@@ -89,16 +88,6 @@ async function getUserPost(postId) {
       </div>`;
   $("#user-post-container").prepend(newPost);
 }
-
-$("#vote-form-button").on("click", () => {
-  $("#flash-container").empty();
-  $("#flash-container").append("You can't like your own message").fadeIn();
-  if ($("#flash-container").length !== 0) {
-    setTimeout(() => {
-      $("#flash-container").fadeOut();
-    }, 2000);
-  }
-});
 
 async function postUpvote(data) {
   const resp = await axios.post("/post/upvote", data);
@@ -171,7 +160,6 @@ async function fetchDataWithDelay() {
 
     localStorage.setItem(storageKey, JSON.stringify(responseData));
 
-    // Remove the loading spinner
     $("#loading").remove();
 
     $("#ai-response").append(`<p>${responseData}</p>`);
@@ -188,8 +176,6 @@ async function genNewResp() {
 }
 
 $("#generate-ai-resp").click(function () {
-  console.log("hello");
-  // Remove the existing response
   $("#ai-response").empty();
 
   $("#ai-response").html(`
@@ -198,7 +184,6 @@ $("#generate-ai-resp").click(function () {
       </div>
     `);
 
-  // Call the function again to regenerate the response
   genNewResp();
 });
 

@@ -1,16 +1,3 @@
-/* color palette 
-
-greens:
-#6EE7B7 #34D399
-
-greys:
-#6B7280 #4B5563
-
-white: 
-whitesmoke
-
-*/
-
 
 video {
 	transform: scale(2);
@@ -19,7 +6,7 @@ video {
 @media screen and (max-width: 768px) {
 	/* CSS styles for devices with a maximum width of 768 pixels */
 	video {
-		transform: scale(3.0);
+		transform: scale(4.0);
 	}
 }
 
@@ -27,4 +14,36 @@ video {
 1px -1px 0 #000,
 -1px 1px 0 #000,
 1px 1px 0 #000;
+}
+
+@media (max-width: 500px) {
+	.nav-link {
+		font-size: 0.5rem;
+	}
+}
+
+@media (max-width: 500px) {
+	#phrase-container {
+		font-size: 2.5rem;
+	}
+
+	.max-w-md {
+		max-width: 20rem;
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="password"],
+	textarea {
+		font-size: 0.875rem;
+	}
+
+	.mb-4 {
+		margin-bottom: 1rem;
+	}
+
+	.py-3 {
+		padding-top: 0.75rem;
+		padding-bottom: 0.75rem;
+	}
 }
