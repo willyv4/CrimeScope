@@ -514,3 +514,14 @@ def generate_ai():
         return jsonify(data=ai_resp)
 
     return jsonify({'error': 'Crime data not found in session'})
+
+
+@app.after_request
+def add_header(req):
+    """Add non-caching headers on every request."""
+
+    req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    req.headers["Pragma"] = "no-cache"
+    req.headers["Expires"] = "0"
+    req.headers['Cache-Control'] = 'public, max-age=0'
+    return req
