@@ -1,8 +1,7 @@
 import openai
-from config import openai_api_key
+import os
 
-
-openai.api_key = openai_api_key
+openai.api_key = os.getenv("openai_api_key")
 
 
 def generate_ai_response(crime_data, city):

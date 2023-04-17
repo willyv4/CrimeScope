@@ -1,6 +1,9 @@
 import requests
 import json
-from config import rapid_api_key, rapid_api_host
+import os
+
+rapid_api_key = os.getenv('rapid_api_key')
+rapid_api_host = os.getenv("rapid_api_host")
 
 
 def get_city_url(city):
