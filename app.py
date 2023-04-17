@@ -82,13 +82,34 @@ def signup():
 
         except IntegrityError:
             flash("Username already taken", 'danger')
+            print("###############################")
+            print("###############################")
+            print("###############################")
+            print("itgratry error", IntegrityError)
+            print("###############################")
+            print("###############################")
+            print("###############################")
             return render_template('users/signup.html', form=form)
 
         do_login(user)
 
         flash(f"Welcome back {user.username}")
+        print("###############################")
+        print("###############################")
+        print("###############################")
+        print("username user", user.username)
+        print("###############################")
+        print("###############################")
+        print("###############################")
         return redirect("/")
     else:
+        print("###############################")
+        print("###############################")
+        print("###############################")
+        print("home page")
+        print("###############################")
+        print("###############################")
+        print("###############################")
         return render_template('users/signup.html', form=form)
 
 
@@ -105,6 +126,13 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
+            print("###############################")
+            print("###############################")
+            print("###############################")
+            print("username user", user.username)
+            print("###############################")
+            print("###############################")
+            print("###############################")
             return redirect("/")
 
         flash("Invalid credentials.", 'danger')
