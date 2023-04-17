@@ -4,7 +4,7 @@ from models import User, Place, Post, Vote
 db.drop_all()
 db.create_all()
 
-# Three fake users
+
 user1 = User.signup(username="johnsmith", password="password123",
                     email="johnsmith@example.com")
 user2 = User.signup(username="janesmith", password="12345password",
@@ -14,9 +14,6 @@ user3 = User.signup(username="bobross", password="happytrees",
 
 db.session.commit()
 
-#
-#
-#
 
 p1 = Place(city_url="new-york-ny", city="New York", state="NY")
 p2 = Place(city_url="los-angeles-ca", city="Los Angeles", state="CA")
@@ -27,15 +24,11 @@ p6 = Place(city_url="atlanta-fulton-ga", city="atlanta", state="GA")
 
 db.session.add_all([p1, p2, p3, p4, p5, p6])
 
-#
-#
-#
 
 u1 = User.query.get(1)
 u2 = User.query.get(2)
 u3 = User.query.get(3)
 
-# Create 2 posts for each user
 post1 = Post(title="My first post", content="Hello world!",
              place_city_url="new-york-ny", user_id=u1.id)
 post2 = Post(title="My second post", content="Goodbye world!",

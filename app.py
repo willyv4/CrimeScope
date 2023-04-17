@@ -12,7 +12,7 @@ import time
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
-app.testing = True
+app.testing = False
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -34,12 +34,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
-
-print("####################################")
-print("####################################")
-print(app.config['SQLALCHEMY_DATABASE_URI'])
-print("####################################")
-print("####################################")
 
 
 @app.before_request
@@ -68,10 +62,10 @@ def do_logout():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    """ handle user signup.
+    """
+    handle user signup.
 
     create new user and add to database. redirect to home page
-
     """
 
     form = UserAddForm()
@@ -129,8 +123,21 @@ def logout():
 
 @app.route('/', methods=["GET", "POST"])
 def homepage():
-    """Show homepage:
     """
+    Renders the homepage and handles a city search form submission for finding and displaying information about a city.
+
+    HTTP Methods:
+    - GET: Renders the homepage with a city search form.
+    - POST: Handles form submission, validates the form, gets the city and state,
+    gets the city URL and its type from an external API, and redirects to the city's page.
+
+    Returns:
+    If the user is not authenticated, redirects to the signup page.
+    If the request method is GET, renders the homepage with a city search form.
+    If the request method is POST and the form is valid, redirects to the city's page.
+    If the request method is POST and the form is invalid, renders the homepage with the form and error message.
+    """
+
     place_url = None
     city = None
     place_type = None
@@ -167,6 +174,18 @@ def homepage():
 
 @app.route('/<place_url>/<place_type>/<city>', methods=["GET", "POST"])
 def show_crime_data(place_url, place_type, city):
+    """
+    Show crime data for a given place.
+
+    Args:
+    - place_url (str): The url of the place.
+    - place_type (str): The type of the place (e.g. city, town, etc.).
+    - city (str): The name of the city.
+
+    Returns:
+    - A rendered template of the crime data page with information on violent and property crimes for the given place,
+      as well as posts related to the place.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -218,6 +237,20 @@ def show_crime_data(place_url, place_type, city):
 
 @app.route("/user_profile/<int:user_id>", methods=["GET", "POST"])
 def user_account_actions(user_id):
+    """
+    Show user account actions:
+
+    Parameters:
+
+    user_id : int
+        The id of the user account to be shown.
+
+    Returns:
+
+    render_template: str
+        The rendered template that shows the user's account information.
+
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -261,6 +294,17 @@ def delete_user():
 
 @app.route('/delete_post/<int:post_id>', methods=["GET", "POST"])
 def delete_post(post_id):
+    """
+    Deletes the specified post and all associated votes from the database.
+
+    If the user is not logged in, it will redirect to the home page.
+
+    Args:
+        post_id (int): The ID of the post to be deleted.
+
+    Returns:
+        A redirect to the user's profile page.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -271,7 +315,7 @@ def delete_post(post_id):
     Vote.query.filter_by(post_id=post_id).delete()
     db.session.delete(post)
     db.session.commit()
-    flash("Post successfully delete", "success")
+    flash("Post deleted", "success")
 
     return redirect(f"/user_profile/{g.user.id}")
 
@@ -285,6 +329,24 @@ def delete_post(post_id):
 
 @app.route('/create/userpost', methods=["GET", "POST"])
 def create_city_post():
+    """
+    Create a new post for a city.
+
+    HTTP Methods:
+        - POST: Create a new post for a city.
+
+    Returns:
+        - Response (json): The created post in JSON format.
+
+    Required Parameters:
+        - placeUrl (str): The URL of the city where the post will be created.
+        - title (str): The title of the post.
+        - content (str): The content of the post.
+
+    Authentication:
+        - The user must be logged in to create a post.
+    """
+
     place_url = request.json["placeUrl"]
     title = request.json['title']
     content = request.json['content']
@@ -301,6 +363,24 @@ def create_city_post():
 
 @app.route('/<int:post_id>', methods=['GET'])
 def get_city_posts(post_id):
+    """
+    Retrieves a post by ID and returns it as a JSON object.
+
+    Parameters:
+    - post_id (int): The ID of the post to retrieve.
+
+    Returns:
+    - A JSON object representing the post, with the following keys:
+        - id (int): The ID of the post.
+        - title (str): The title of the post.
+        - content (str): The content of the post.
+        - place_city_url (str): The URL of the city associated with the post.
+        - user_id (int): The ID of the user who created the post.
+        - created_at (str): The creation date of the post in ISO format.
+        - place (dict): A dictionary with keys "city" and "state" representing the city and state associated with the post.
+        - user (dict): A dictionary with keys "id" and "username" representing the user who created the post.
+        - num_votes (int): The number of votes received by the post.
+    """
 
     post = Post.query.get_or_404(post_id)
 
@@ -327,6 +407,24 @@ def get_city_posts(post_id):
 
 @app.route('/post/upvote', methods=["POST"])
 def handle_vote_post_req():
+    """
+    Handles the HTTP POST request for upvoting a post.
+
+    Returns a JSON object containing a success message, the updated vote count, and a CSS class for the vote button.
+    If the user has already upvoted the post, removes the upvote and returns a message indicating that the vote was removed.
+    If the post was created by the same user, returns a message indicating that the user can't like their own post.
+
+    Raises:
+        404: If the post with the given ID does not exist.
+
+    Returns:
+        A JSON object with the following properties:
+        - success: A boolean indicating whether the request was successful.
+        - message: A string message indicating the result of the request.
+        - upvotes: An integer representing the updated number of upvotes for the post.
+        - class: A string representing the CSS class for the vote button.
+        - post-id: An integer representing the ID of the post that was upvoted.
+    """
     post_id = request.json["postId"]
 
     user = g.user
@@ -334,32 +432,39 @@ def handle_vote_post_req():
 
     if post.user_id == g.user.id:
         data = {"message": "User can't like their own post",
-                "class": "bg-gray-200 rounded"}, 200
+                "class": "bg-gray-200 rounded", "post-id": post_id}, 200
 
         return jsonify(data)
 
-    # if the post is in user's likes then remove the "like"
+    # if the post is in user's votes then remove the "vote"
     if post in user.votes:
         user.votes.remove(post)
         db.session.commit()
         vote_count = len(post.votes)
         data = {"success": True, "message": "Vote removed",
-                "upvotes": vote_count, "class": "bg-gray-300 rounded"}, 200
+                "upvotes": vote_count, "class": "bg-gray-300 rounded", "post-id": post_id}, 200
 
         return jsonify(data)
 
-    # else like the post
+    # else vote the post
     user.votes.append(post)
     db.session.commit()
     vote_count = len(post.votes)
     data = {"success": True, "message": "Post upvoted",
-            "upvotes": vote_count, "class": "bg-green-300 rounded"}, 200
+            "upvotes": vote_count, "class": "bg-green-300 rounded", "post-id": post_id}, 200
 
     return jsonify(data)
 
 
 @app.route('/get/upvote', methods=['GET'])
 def handle_vote_get_req():
+    """
+    Handles GET request to retrieve the number of upvotes for a specific post.
+
+    Returns:
+        A JSON object containing the number of upvotes for the post.
+    """
+
     post_id = request.args.get("postId")
     post = Post.query.get_or_404(post_id)
 
@@ -369,8 +474,24 @@ def handle_vote_get_req():
     return jsonify(data)
 
 
-@app.route('/get_crime_data', methods=["GET"])
-def get_crimes():
+@app.route('/generate_ai', methods=["GET"])
+def generate_ai():
+    """
+    Generates an AI response using crime data.
+
+    Returns a JSON response containing the generated AI response.
+
+    Query Parameters:
+        - 'crimes' (string): The crime data for the city in question.
+        - 'city' (string): The name of the city for which the crime data is provided.
+
+    Session Variables:
+        - 'crimes' (string): The crime data for the city in question.
+        - 'city' (string): The name of the city for which the crime data is provided.
+
+    Returns:
+        - (json): A JSON response containing the generated AI response.
+    """
     crimes = session.get('crimes')
     city = session.get("city")
 

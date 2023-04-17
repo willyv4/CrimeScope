@@ -43,14 +43,6 @@ def get_crime_data(place, place_type):
 
     place_data = json.loads(response2.text)
 
-    print("############################")
-    print(response2)
-    print("############################")
-    print("############################")
-    print("############################")
-    print("{'name': 'Service Unavailable', 'message': 'Internal Exception. Contact apimaker', 'code': 0, 'status': 503}")
-    print("############################")
-
     if response2.status_code == 200:
         return place_data
     else:

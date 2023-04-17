@@ -1,3 +1,9 @@
+/* 
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   CREATE USER POST AND HANDLE VOTE MESSAGE ON FRONT-END
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
 async function createUserPost(placeUrl, title, content) {
   const resp = await axios.post(`/create/userpost`, {
     title: title,
@@ -16,6 +22,18 @@ async function createUserPost(placeUrl, title, content) {
   postId = resp.data.post.id;
   await getUserPost(postId);
 }
+
+$("#create_post_for_city").on("submit", async function (e) {
+  e.preventDefault();
+
+  const title = $("#post-title").val();
+  const content = $("#post-content").val();
+  const placeUrl = $("#place-url").val();
+  const city = $("#city_name").val();
+  await createUserPost(placeUrl, title, content);
+  $("#create_post_for_city")[0].reset();
+  $("#no-post-content").remove();
+});
 
 async function getUserPost(postId) {
   const response = await axios.get(`/${postId}`);
@@ -87,14 +105,31 @@ async function getUserPost(postId) {
         </div>
       </div>`;
   $("#user-post-container").prepend(newPost);
+
+  $("#vote-form-button").on("click", () => {
+    $("#flash-container").empty();
+    $("#flash-container").append("You can't vote on your post").fadeIn();
+    if ($("#flash-container").length !== 0) {
+      setTimeout(() => {
+        $("#flash-container").fadeOut();
+      }, 2000);
+    }
+  });
 }
+
+/* 
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  HANDLE VOTES  HANDLE VOTES  HANDLE VOTES 
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 async function postUpvote(data) {
   const resp = await axios.post("/post/upvote", data);
   const voteClass = resp.data[0]["class"];
   const message = resp.data[0]["message"];
+  const postId = resp.data[0]["post-id"];
 
-  $("#vote-form-button").removeClass().addClass(voteClass);
+  $(`#vote-form-button-${postId}`).removeClass().addClass(voteClass);
   $("#flash-container").empty();
   $("#flash-container").append(message).fadeIn();
   if ($("#flash-container").length !== 0) {
@@ -119,27 +154,14 @@ $(".vote-form").on("submit", async function (e) {
   await getUpvote({ postId: postId });
 });
 
-$("#create_post_for_city").on("submit", async function (e) {
-  e.preventDefault();
+/* 
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  HANLDE GPT AI RESPONSE AND STORE FIRST RESPONSE
+  IN LOCAL STORAGE
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-  const title = $("#post-title").val();
-  const content = $("#post-content").val();
-  const placeUrl = $("#place-url").val();
-  const city = $("#city_name").val();
-  await createUserPost(placeUrl, title, content);
-  $("#create_post_for_city")[0].reset();
-  $("#no-post-content").remove();
-});
-
-$("#city-form").on("submit", async function (event) {
-  const cityInput = $("#city-input").val();
-  const stateInput = $("#state-input").val();
-  console.log(cityInput);
-  console.log(stateInput);
-  await sendCityFormData(cityInput, stateInput);
-});
-
-async function fetchDataWithDelay() {
+async function getAiResponse() {
   const placeUrl = $("#place-url").val();
   const storageKey = `crimeData_${placeUrl}`;
 
@@ -155,7 +177,7 @@ async function fetchDataWithDelay() {
       </div>
     `);
 
-    const response = await axios.get("/get_crime_data");
+    const response = await axios.get("/generate_ai");
     const responseData = response.data["data"];
 
     localStorage.setItem(storageKey, JSON.stringify(responseData));
@@ -166,8 +188,8 @@ async function fetchDataWithDelay() {
   }
 }
 
-async function genNewResp() {
-  const response = await axios.get("/get_crime_data");
+async function getNewAiResp() {
+  const response = await axios.get("/generate_ai");
   const responseData = response.data["data"];
   if (responseData) {
     $("#loading").remove();
@@ -184,7 +206,7 @@ $("#generate-ai-resp").click(function () {
       </div>
     `);
 
-  genNewResp();
+  getNewAiResp();
 });
 
 const placeUrl = $("#place-url").val();
@@ -192,8 +214,14 @@ if (
   (window.location.href.includes(placeUrl) && placeUrl !== null) ||
   undefined
 ) {
-  fetchDataWithDelay();
+  getAiResponse();
 }
+
+/* 
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  TOGGLE DELETE ACCOUNT BUTTON ON USER PROFILE
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 $("#toggle-delete-visibility").on("click", () => {
   const delBtn = $("#account-delete-button");

@@ -1,5 +1,4 @@
 {% extends 'base.html' %} {% block content %}
-
 <div class="flex flex-wrap justify-center">
   <div class="w-full lg:w-2/3 p-4 mt-16">
     <div
@@ -162,7 +161,7 @@
               />
               <button
                 type="submit"
-                id="vote-form-button"
+                id="vote-form-button-{{post.id}}"
                 class="bg-{{ g.user and post in g.user.votes and 'green-300' or 'gray-300' }} rounded"
               >
                 <svg
@@ -209,5 +208,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
