@@ -13,6 +13,7 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 app.testing = False
+app.config['TIMEOUT'] = 60
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
