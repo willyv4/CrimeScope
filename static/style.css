@@ -24,26 +24,18 @@ video {
 
 @media (max-width: 500px) {
 	#phrase-container {
-		font-size: 2.5rem;
+		font-size: 2rem;
+		margin-top: -6rem;
 	}
 
 	.max-w-md {
-		max-width: 20rem;
+		max-width: 22rem;
 	}
 
-	input[type="text"],
-	input[type="email"],
-	input[type="password"],
-	textarea {
-		font-size: 0.875rem;
+	#form-container {
+		margin-top: -28rem;
 	}
-
-	.mb-4 {
-		margin-bottom: 1rem;
-	}
-
-	.py-3 {
-		padding-top: 0.75rem;
-		padding-bottom: 0.75rem;
+	#form-container input {
+		margin: 0px;
 	}
 }

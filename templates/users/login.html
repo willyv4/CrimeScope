@@ -14,7 +14,10 @@
   >
     <p id="phrase-container"></p>
   </div>
-  <div class="w-full lg:w-1/2 justify-center items-center mt-20">
+  <div
+    id="form-container"
+    class="w-full lg:w-1/2 justify-center items-center mt-20"
+  >
     <form method="POST" id="login_account_form" class="max-w-md mx-auto">
       {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
       'hidden' %}
