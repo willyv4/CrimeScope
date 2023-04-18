@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
+from flask import Flask, render_template, redirect, flash, request, session, g, jsonify
 from sqlalchemy.exc import IntegrityError
 from models import User, Post, Place, Vote, connect_db, db
 from forms import CitySearchForm, EditUserForm, LoginForm, UserAddForm
@@ -79,6 +79,14 @@ def signup():
                 email=form.email.data,
             )
             db.session.commit()
+            flash("Username already taken", 'danger')
+            print("###############################")
+            print("###############################")
+            print("###############################")
+            print("form valiting", user)
+            print("###############################")
+            print("###############################")
+            print("###############################")
 
         except IntegrityError:
             flash("Username already taken", 'danger')
@@ -134,6 +142,14 @@ def login():
             print("###############################")
             print("###############################")
             return redirect("/")
+
+        print("###############################")
+        print("###############################")
+        print("###############################")
+        print("Invalid credentials")
+        print("###############################")
+        print("###############################")
+        print("###############################")
 
         flash("Invalid credentials.", 'danger')
 

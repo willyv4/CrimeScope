@@ -107,6 +107,7 @@ async function getUserPost(postId) {
   $("#user-post-container").prepend(newPost);
 
   $("#vote-form-button").on("click", () => {
+    console.log("this should flash");
     $("#flash-container").empty();
     $("#flash-container").append("You can't vote on your post").fadeIn();
     if ($("#flash-container").length !== 0) {
@@ -214,6 +215,7 @@ if (
   (window.location.href.includes(placeUrl) && placeUrl !== null) ||
   undefined
 ) {
+  console.log("api called");
   getAiResponse();
 }
 
