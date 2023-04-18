@@ -19,21 +19,23 @@ video {
 		max-width: 22rem;
 	}
 
+	#screen-container {
+		overflow-y: scroll;
+	}
+
 
 	#form-container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 1;
+		max-width: 80%;
+		margin-bottom: 16rem;
+		margin-top: 4rem;
 	}
 	
 	#phrase-container {
-		position: relative;
-		z-index: 2;
-		font-size: 2.5rem;
-		margin-top: 8rem;
+		font-size: 2rem;
+		width: 80%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10%;
 	}
 
 	
@@ -48,11 +50,8 @@ video {
 	#city-form {
 		position: absolute;
 		top: 6rem;
-		/* the same margin-top as #phrase-container */
 		left: 0;
 		right: 0;
 		margin: 0 auto;
-		max-width: 90%;
-		/* adjust the width as needed */
 	}
 }

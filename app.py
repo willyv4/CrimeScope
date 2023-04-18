@@ -13,7 +13,6 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 app.testing = False
-app.config['TIMEOUT'] = 60
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -50,6 +49,7 @@ def add_user_to_g():
 
 def do_login(user):
     """Log in user."""
+    session.clear()
 
     session[CURR_USER_KEY] = user.id
 
@@ -79,45 +79,16 @@ def signup():
                 email=form.email.data,
             )
             db.session.commit()
-            flash("Username already taken", 'danger')
-            print("###############################")
-            print("###############################")
-            print("###############################")
-            print("form valiting", user)
-            print("###############################")
-            print("###############################")
-            print("###############################")
 
         except IntegrityError:
             flash("Username already taken", 'danger')
-            print("###############################")
-            print("###############################")
-            print("###############################")
-            print("itgratry error", IntegrityError)
-            print("###############################")
-            print("###############################")
-            print("###############################")
             return render_template('users/signup.html', form=form)
 
+        flash(f"Welcome, {user.username}")
         do_login(user)
-
-        flash(f"Welcome back {user.username}")
-        print("###############################")
-        print("###############################")
-        print("###############################")
-        print("username user", user.username)
-        print("###############################")
-        print("###############################")
-        print("###############################")
         return redirect("/")
     else:
-        print("###############################")
-        print("###############################")
-        print("###############################")
-        print("home page")
-        print("###############################")
-        print("###############################")
-        print("###############################")
+
         return render_template('users/signup.html', form=form)
 
 
@@ -134,22 +105,7 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
-            print("###############################")
-            print("###############################")
-            print("###############################")
-            print("username user", user.username)
-            print("###############################")
-            print("###############################")
-            print("###############################")
             return redirect("/")
-
-        print("###############################")
-        print("###############################")
-        print("###############################")
-        print("Invalid credentials")
-        print("###############################")
-        print("###############################")
-        print("###############################")
 
         flash("Invalid credentials.", 'danger')
 
