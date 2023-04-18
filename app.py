@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, flash, request, session, g, jsonify
 from sqlalchemy.exc import IntegrityError
+from flask_debugtoolbar import DebugToolbarExtension
 from models import User, Post, Place, Vote, connect_db, db
 from forms import CitySearchForm, EditUserForm, LoginForm, UserAddForm
 from openAI_api import generate_ai_response
@@ -13,6 +14,7 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 app.testing = False
+
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -32,6 +34,7 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 

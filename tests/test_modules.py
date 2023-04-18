@@ -1,6 +1,4 @@
-from turtle import pos
 from app import app
-import os
 from sqlalchemy.exc import IntegrityError
 from unittest import TestCase
 from models import db, User, Place, Post, Vote

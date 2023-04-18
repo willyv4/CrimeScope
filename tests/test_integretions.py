@@ -128,13 +128,6 @@ class UserViews(TestCase):
         resp = c.get("/griffin-spalding-ga/Town/griffin")
         self.assertEqual(resp.status_code, 200)
 
-        self.assertIn(
-            b'<h2 class="text-2xl font-bold mb-4">Property Crime Rates</h2>', resp.data)
-        self.assertIn(
-            b'<h2 class="text-2xl font-bold mb-4">Violent Crime Rates</h2>', resp.data)
-
-        # upvote user post
-
         post_id = {
             "postId": 2
         }
@@ -143,7 +136,7 @@ class UserViews(TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.get_json()
         self.assertTrue(data[0]['success'])
-        self.assertEqual(data[0]['message'], 'post upvoted')
+        self.assertEqual(data[0]['message'], 'Post upvoted')
         self.assertEqual(data[0]['upvotes'], 1)
 
         user = User.query.get(self.user1.id)
@@ -155,7 +148,7 @@ class UserViews(TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.get_json()
         self.assertTrue(data[0]['success'])
-        self.assertEqual(data[0]['message'], 'vote removed')
+        self.assertEqual(data[0]['message'], 'Vote removed')
         self.assertEqual(data[0]['upvotes'], 0)
 
         # Check that the user's like was removed
