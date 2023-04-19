@@ -161,6 +161,10 @@ def homepage():
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
+                print("#################################")
+                print(
+                    f"existing place, {place_url}, {place_type}, {city_state}")
+                print("#################################")
                 return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
             else:
                 if place_url:
@@ -168,6 +172,10 @@ def homepage():
                     db.session.add(place)
                     db.session.commit()
 
+                    print("#################################")
+                    print(
+                        f"new place, {place_url}, {place_type}, {city_state}")
+                    print("#################################")
                     return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
                 else:
                     print("cant find place!")
@@ -175,6 +183,10 @@ def homepage():
 
         return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type)
     else:
+        print("#################################")
+        print(
+            f"JUST REDIRECTING, {place_url}, {place_type}, {city_state}")
+        print("#################################")
         return redirect("/signup")
 
 
