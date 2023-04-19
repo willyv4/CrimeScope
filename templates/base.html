@@ -8,7 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/static/css/dist/output.css" />
+    <!-- <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dist/output.css') }}"
+    /> -->
     <!-- <link rel="stylesheet" href="/static/style.css" /> -->
 
     <title>CrimeScope</title>
@@ -80,5 +83,7 @@
     {% block content %} {% endblock %}
     <script src="/static/app.js"></script>
     <script src="/static/animate.js"></script>
+    <script src="tailwind.config.js"></script>
+    <!-- <script src="https://unpkg.com/tailwindcss-jit-cdn"></script> -->
   </body>
 </html>
