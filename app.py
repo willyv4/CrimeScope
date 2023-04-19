@@ -18,6 +18,8 @@ app.testing = False
 if __name__ == '__main__':
     app.run(debug=False)
 
+app.config['TIMEOUT'] = 60
+
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
