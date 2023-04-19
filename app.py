@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
 from sqlalchemy.exc import IntegrityError
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from models import User, Post, Place, Vote, connect_db, db
 from forms import CitySearchForm, EditUserForm, LoginForm, UserAddForm
 from openAI_api import generate_ai_response
@@ -15,8 +15,9 @@ CURR_USER_KEY = "curr_user"
 app = Flask(__name__,  static_url_path='/static')
 app.testing = False
 
+
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
 
 app.config['TIMEOUT'] = 80
 
@@ -150,6 +151,7 @@ def homepage():
     place_url = None
     city = None
     place_type = None
+    city_state = None
 
     if g.user:
 
@@ -157,9 +159,13 @@ def homepage():
 
         if form.validate_on_submit():
             city = form.city.data
-            state = form.state.data
-            city_state = city.capitalize() + " " + state
-            place_url, place_type = get_city_url(city_state)
+            state = form.state.data or ''
+
+            if state:
+                city_state = city.capitalize() + " " + state
+            else:
+                city_state = city.capitalize()
+                place_url, place_type = get_city_url(city_state)
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
