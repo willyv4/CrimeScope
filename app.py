@@ -165,6 +165,7 @@ def homepage():
                 city_state = city.capitalize() + " " + state
             else:
                 city_state = city.capitalize()
+
                 place_url, place_type = get_city_url(city_state)
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
@@ -189,7 +190,7 @@ def homepage():
                     print("cant find place!")
                     flash("Whoops there was an error. Try another search")
 
-        return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type)
+        return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type, city_state=city_state)
     else:
         print("#################################")
         print(
