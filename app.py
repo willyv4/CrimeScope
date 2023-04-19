@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, flash, request, session, g, jsonify
+from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
 from sqlalchemy.exc import IntegrityError
 from flask_debugtoolbar import DebugToolbarExtension
 from models import User, Post, Place, Vote, connect_db, db
@@ -92,7 +92,7 @@ def signup():
 
         flash(f"Welcome, {user.username}")
         do_login(user)
-        return redirect("/")
+        return redirect(url_for("homepage"))
     else:
 
         return render_template('users/signup.html', form=form)
@@ -111,7 +111,7 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
-            return redirect("/")
+            return redirect(url_for("homepage"))
 
         flash("Invalid credentials.", 'danger')
 
@@ -125,7 +125,7 @@ def logout():
     do_logout()
 
     flash("Goodbye!", "success")
-    return redirect('/login')
+    return redirect(url_for("login"))
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -161,14 +161,14 @@ def homepage():
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
-                return redirect(f'/{place_url}/{place_type}/{city_state}')
+                return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
             else:
                 if place_url:
                     place = Place(city_url=place_url, city=city, state=state)
                     db.session.add(place)
                     db.session.commit()
 
-                    return redirect(f'/{place_url}/{place_type}/{city_state}')
+                    return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
                 else:
                     print("cant find place!")
                     flash("Whoops there was an error. Try another search")
@@ -178,8 +178,8 @@ def homepage():
         return redirect("/signup")
 
 
-@app.route('/<place_url>/<place_type>/<city>', methods=["GET", "POST"])
-def show_crime_data(place_url, place_type, city):
+@app.route('/<place_url>/<place_type>/<city_state>', methods=["GET", "POST"])
+def show_crime_data(place_url, place_type, city_state):
     """
     Show crime data for a given place.
 
@@ -208,7 +208,7 @@ def show_crime_data(place_url, place_type, city):
     crimes = crime_data['crime-safety']
 
     session["crimes"] = crimes
-    session["city"] = city
+    session["city"] = city_state
 
     violent_crime_list = []
     violent_crimes = crimes['Violent Crimes']
@@ -238,7 +238,7 @@ def show_crime_data(place_url, place_type, city):
         outerjoin(Vote).group_by(Post.id).\
         order_by(desc(func.count(Vote.id))).all()
 
-    return render_template("users/show_crime_data.html", posts=posts, place_url=place_url, city=city, v_crime=violent_crime_list, p_crime=property_crime_list)
+    return render_template("users/show_crime_data.html", posts=posts, place_url=place_url, city=city_state, v_crime=violent_crime_list, p_crime=property_crime_list)
 
 
 @app.route("/user_profile/<int:user_id>", methods=["GET", "POST"])
@@ -457,7 +457,7 @@ def handle_vote_post_req():
     db.session.commit()
     vote_count = len(post.votes)
     data = {"success": True, "message": "Post upvoted",
-            "upvotes": vote_count, "class": "bg-green-300 rounded", "post-id": post_id}, 200
+            "upvotes": vote_count, "class": "bg-emerald-300 rounded", "post-id": post_id}, 200
 
     return jsonify(data)
 
