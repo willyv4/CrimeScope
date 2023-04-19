@@ -15,6 +15,11 @@ CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
 app.testing = False
 
+if app.env == 'production':
+    print("Running in production mode")
+else:
+    print("Running in development mode")
+
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
