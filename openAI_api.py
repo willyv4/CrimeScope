@@ -37,7 +37,7 @@ def generate_ai_response(crime_data, city):
 
     Provide safety tips specific to the most common crime rates within {city} and its most dangerous areas. Explain how these safety tips relate to the most common crime rates.
 
-    format your response using tailwind css (full width and gray-100 backgound color)and html like this:
+    format your response using tailwind css (full width with no backgound color) and html like this:
 
     summary 
 
@@ -49,7 +49,7 @@ def generate_ai_response(crime_data, city):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         temperature=.5,
-        max_tokens=750,
+        max_tokens=550,
         messages=[
             {"role": "user", "content": prompt}
         ]

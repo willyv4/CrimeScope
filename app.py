@@ -18,7 +18,7 @@ app.testing = False
 if __name__ == '__main__':
     app.run(debug=False)
 
-app.config['TIMEOUT'] = 60
+app.config['TIMEOUT'] = 80
 
 
 if app.testing:
