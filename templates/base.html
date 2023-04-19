@@ -4,16 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/tailwindcss@^2.2.4/dist/tailwind.min.css"
-    />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/style.css" />
-
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dist/output.css') }}"
+    />
     <title>CrimeScope</title>
   </head>
   <body>
@@ -32,7 +31,7 @@
           </li>
           <li
             id="flash-container"
-            class="absolute top-16 md:top-5 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-300 text-black text-shadow"
+            class="absolute top-16 md:top-5 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-emerald-300 text-black text-shadow"
           >
             {% for category, message in
             get_flashed_messages(with_categories=True) %}
@@ -47,14 +46,14 @@
               <li>
                 <a
                   href="/signup"
-                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
                   >Create Account</a
                 >
               </li>
               <li>
                 <a
                   href="/login"
-                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
                   >Log in</a
                 >
               </li>
@@ -62,14 +61,14 @@
               <li>
                 <a
                   href="/user_profile/{{g.user.id}}"
-                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
                   >Your profile</a
                 >
               </li>
               <li>
                 <a
                   href="/logout"
-                  class="nav-link bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
                   >Log out</a
                 >
               </li>

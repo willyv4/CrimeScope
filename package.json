@@ -1,0 +1,19 @@
+{
+  "name": "crime-scope",
+  "scripts": {
+    "tw-build": "npx tailwindcss -i ./static/css/src/input.css -o ./static/css/dist/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willyv4/CrimeScope.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/willyv4/CrimeScope/issues"
+  },
+  "homepage": "https://github.com/willyv4/CrimeScope#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.3.1"
+  }
+}
