@@ -15,6 +15,9 @@ CURR_USER_KEY = "curr_user"
 app = Flask(__name__,  static_url_path='/static')
 app.testing = False
 
+if __name__ == '__main__':
+    app.run(debug=False)
+
 
 if app.testing:
     app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -34,7 +37,7 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
@@ -165,7 +168,6 @@ def homepage():
                     db.session.add(place)
                     db.session.commit()
 
-                    time.sleep(1)
                     return redirect(f'/{place_url}/{place_type}/{city_state}')
                 else:
                     print("cant find place!")
@@ -529,7 +531,3 @@ def add_header(req):
     req.headers["Expires"] = "0"
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
