@@ -38,7 +38,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 # toolbar = DebugToolbarExtension(app)
 
@@ -88,7 +88,9 @@ def signup():
                 email=form.email.data,
             )
             db.session.commit()
-
+            print("##########################################")
+            print('CSRF token:', request.form['csrf_token'])
+            print("##########################################")
         except IntegrityError:
             flash("Username already taken", 'danger')
             return render_template('users/signup.html', form=form)
@@ -114,6 +116,9 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
+            print("##########################################")
+            print('CSRF token:', request.form['csrf_token'])
+            print("##########################################")
             return redirect(url_for("homepage"))
 
         flash("Invalid credentials.", 'danger')
@@ -160,6 +165,9 @@ def homepage():
         if form.validate_on_submit():
             city = form.city.data
             state = form.state.data or ''
+            print("##########################################")
+            print('CSRF token:', request.form['csrf_token'])
+            print("##########################################")
 
             if state:
                 city_state = city.capitalize() + " " + state

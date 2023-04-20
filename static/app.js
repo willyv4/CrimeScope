@@ -172,8 +172,8 @@ async function getAiResponse() {
     const parsedData = JSON.parse(storedData);
     $("#ai-response").append(`<p>${parsedData}</p>`);
   } else {
-    $("#ai-response").html(`
-      <div id="loading" class="flex mt-32 justify-center items-center">
+    $("#ai-response").append(`
+      <div id="loading" class="flex w-full justify-center items-center">
         <div class="border-t-4 border-b-4 border-gray-400 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     `);
@@ -192,6 +192,7 @@ async function getAiResponse() {
 async function getNewAiResp() {
   const response = await axios.get("/generate_ai");
   const responseData = response.data["data"];
+
   if (responseData) {
     $("#loading").remove();
     $("#ai-response").append(`<p>${responseData}</p>`);
@@ -201,7 +202,7 @@ async function getNewAiResp() {
 $("#generate-ai-resp").click(function () {
   $("#ai-response").empty();
 
-  $("#ai-response").html(`
+  $("#ai-response").append(`
       <div id="loading" class="flex mt-32 justify-center items-center">
         <div class="border-t-4 border-b-4 border-gray-400 rounded-full w-12 h-12 animate-spin"></div>
       </div>
