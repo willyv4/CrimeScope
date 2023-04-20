@@ -38,7 +38,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
+# app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 # toolbar = DebugToolbarExtension(app)
 
