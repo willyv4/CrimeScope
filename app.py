@@ -42,7 +42,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 # toolbar = DebugToolbarExtension(app)
 
-connect_db(app)
+with app.app_context():
+    connect_db(app)
 
 
 @app.before_request
