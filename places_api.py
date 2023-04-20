@@ -23,7 +23,7 @@ def get_city_url(city):
     data = json.loads(response.text)
 
     for place in data:
-        if place["type"] == "Town":
+        if isinstance(place, dict) and place["type"] == "Town":
             url_fragment = place["urlFragment"]
             city_type = place["type"]
             return (url_fragment, city_type)
