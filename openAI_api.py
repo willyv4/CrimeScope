@@ -49,7 +49,7 @@ def generate_ai_response(crime_data, city):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         temperature=.5,
-        max_tokens=550,
+        max_tokens=750,
         messages=[
             {"role": "user", "content": prompt}
         ]

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-screen w-screen">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,8 +16,8 @@
 
     <title>CrimeScope</title>
   </head>
-  <body>
-    <nav class="fixed w-full z-40 bg-black opacity-90 text-white py-4">
+  <body class="h-screen w-screen">
+    <nav class="fixed top-0 w-full z-40 bg-black opacity-90 text-white py-4">
       <div class="container mx-auto px-4">
         <ul class="flex justify-between">
           <li class="flex">
@@ -30,9 +30,10 @@
             </a>
             <a href="/" class="text-2xl font-bold">CrimeScope</a>
           </li>
+          {% if get_flashed_messages() %}
           <li
             id="flash-container"
-            class="absolute top-16 md:top-5 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-emerald-300 text-black text-shadow"
+            class="absolute z-40 top-16 md:top-16 w-full text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold text-emerald-300 bg-black p-4"
           >
             {% for category, message in
             get_flashed_messages(with_categories=True) %}
@@ -41,6 +42,8 @@
             </div>
             {% endfor %}
           </li>
+          {% endif %}
+
           <li>
             <ul class="flex space-x-4 mt-1">
               {% if not g.user %}

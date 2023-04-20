@@ -12,12 +12,12 @@ const slides = [wittyString, seriousString, newToCityString];
 let currentSlide = 0;
 
 function showNextSlide() {
-  $("#phrase-container").fadeOut(500, function () {
+  $("#phrase-container-login-signup").fadeOut(500, function () {
     $(this).text(slides[currentSlide]).fadeIn(500);
     currentSlide = (currentSlide + 1) % slides.length;
   });
 }
 
-$("#phrase-container").text(slides[1]);
+$("#phrase-container-login-signup").text(slides[1]);
 
 setInterval(showNextSlide, 6000);

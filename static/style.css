@@ -1,15 +1,15 @@
 
 
 
-video {
-	transform: scale(2);
+#globe-video {
+	transform: scale(2.3);
 }
 
 @media screen and (max-width: 768px) {
 
 	/* CSS styles for devices with a maximum width of 768 pixels */
-	video {
-		transform: scale(4.0);
+	#globe-video {
+		transform: scale(4);
 	}
 }
 
@@ -22,47 +22,38 @@ video {
 		max-width: 22rem;
 	}
 
-	#screen-container {
+
+	#screen-container-login-signup {
 		overflow-y: scroll;
 	}
 
 
-	#form-container {
+	#form-container-login-signup {
 		max-width: 80%;
 		margin-bottom: 16rem;
 		margin-top: 4rem;
 	}
 	
-	#phrase-container {
+	#phrase-container-login-signup {
 		font-size: 2rem;
-		width: 80%;
+		width: 90%;
 		margin-left: auto;
 		margin-right: auto;
 		margin-top: 10%;
 	}
-
-	#phrase-container {
-		font-size: 2rem;
-		width: 80%;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 10%;
-	}
-
 
 	#scope-img {
 		position: absolute;
 		top: 35%;
 		left: 50%;
-		transform: translate(-50%, -50%) scale(1);
-		/* center the image and scale it to 50% */
-	}
+		transform: translate(-50%, -50%) scale(.75);
+	 }
 
-	#city-form {
+	#city-form-home {
 		position: absolute;
-		top: 6rem;
+		top: 20%;
 		left: 0;
 		right: 0;
 		margin: 0 auto;
-	}
-}
+	} 
+} 

@@ -1,29 +1,35 @@
 {% extends 'base.html' %} {% block content %}
-<!-- <video class="fixed inset-0 w-full h-full z-0 opacity-30" autoplay muted loop>
+<video
+  id="globe-video"
+  class="fixed inset-0 w-full h-full z-0 opacity-30"
+  autoplay
+  muted
+  loop
+>
   <source
     src="static/images/vecteezy-earth-1022-an-earth-globe-rotates-on-a-white-cyc-loop-1623478_aQvrT7qn.mp4"
     type="video/mp4"
   />
-</video> -->
+</video>
 
 <div
-  id="screen-container"
+  id="screen-container-login-signup"
   class="fixed h-screen w-screen inset-0 flex flex-wrap lg:flex-no-wrap justify-center items-center bg-gradient-to-tr from-black"
 >
   <div
     class="w-full lg:w-1/2 justify-center items-center text-gray-50 font-bold text-5xl max-w-md h-60 mx-auto mt-20"
   >
-    <p id="phrase-container"></p>
+    <p id="phrase-container-login-signup"></p>
   </div>
   <div
-    id="form-container"
+    id="form-container-login-signup"
     class="w-full lg:w-1/2 justify-center items-center mt-20"
   >
     <form
       method="POST"
       action="{{ url_for('signup') }}"
       id="create_account_form"
-      class="max-w-md mx-auto"
+      class="max-w-md mx-auto bg-black bg-opacity-70 p-4 rounded"
     >
       {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
       'hidden' %}

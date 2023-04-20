@@ -169,13 +169,9 @@ def homepage():
             print("##########################################")
             print('CSRF token:', request.form['csrf_token'])
             print("##########################################")
+            city_state = city.capitalize() + " " + state
+            place_url, place_type = get_city_url(city_state)
 
-            if state:
-                city_state = city.capitalize() + " " + state
-            else:
-                city_state = city.capitalize()
-
-                place_url, place_type = get_city_url(city_state)
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:

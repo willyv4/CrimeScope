@@ -118,6 +118,12 @@ async function getUserPost(postId) {
   });
 }
 
+if ($("#flash-container").length !== 0) {
+  setTimeout(() => {
+    $("#flash-container").fadeOut();
+  }, 3500);
+}
+
 /* 
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   HANDLE VOTES  HANDLE VOTES  HANDLE VOTES 
@@ -173,9 +179,22 @@ async function getAiResponse() {
     $("#ai-response").append(`<p>${parsedData}</p>`);
   } else {
     $("#ai-response").append(`
-      <div id="loading" class="flex w-full justify-center items-center">
-        <div class="border-t-4 border-b-4 border-gray-400 rounded-full w-12 h-12 animate-spin"></div>
+       <div id="loading" class="p-4 w-full mx-auto h-full">
+  <div class="animate-pulse flex space-x-4">
+    <div class="rounded-full bg-gray-200 h-10 w-10"></div>
+    <div class="flex-1 space-y-6 py-1">
+      <div class="h-2 bg-gray-200 rounded"></div>
+      <div class="space-y-3">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="h-2 bg-gray-200 rounded col-span-2"></div>
+          <div class="h-2 bg-gray-200 rounded col-span-1"></div>
+        </div>
+        <div class="h-2 bg-gray-200 rounded"></div>
       </div>
+      <h1 class="text-center">GENERATING RESPONSE...</h1>
+    </div>
+  </div>
+</div>
     `);
 
     const response = await axios.get("/generate_ai");
@@ -203,9 +222,22 @@ $("#generate-ai-resp").click(function () {
   $("#ai-response").empty();
 
   $("#ai-response").append(`
-      <div id="loading" class="flex mt-32 justify-center items-center">
-        <div class="border-t-4 border-b-4 border-gray-400 rounded-full w-12 h-12 animate-spin"></div>
+      <div id="loading" class="p-4 w-full mx-auto h-full">
+  <div class="animate-pulse flex space-x-4">
+    <div class="rounded-full bg-gray-200 h-10 w-10"></div>
+    <div class="flex-1 space-y-6 py-1">
+      <div class="h-2 bg-gray-200 rounded"></div>
+      <div class="space-y-3">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="h-2 bg-gray-200 rounded col-span-2"></div>
+          <div class="h-2 bg-gray-200 rounded col-span-1"></div>
+        </div>
+        <div class="h-2 bg-gray-200 rounded"></div>
       </div>
+      <h1 class="text-center">GENERATING RESPONSE...</h1>
+    </div>
+  </div>
+</div>
     `);
 
   getNewAiResp();
