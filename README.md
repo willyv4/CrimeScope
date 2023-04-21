@@ -1,5 +1,7 @@
 # <div style="text-align:center;">CrimeScope</div>
 
+## <a href="https://crime-scope.herokuapp.com/signup">CrimeScope Website</a>
+
 ## APIs:
 
 <a href="https://rapidapi.com/apimaker/api/find-places-to-live/">Rapid API "Find Places to Live"</a>
