@@ -34,21 +34,19 @@ def generate_ai_response(crime_data, city):
 
     Here is Crime data for {city} to reference throughout your response: violent crimes include {violent_crime_list}, and property crimes include {property_crime_list}.
 
-    - Provide overall differences between national and {city}'s crime rates using percentages.
+    - Concisely provide overall differences between national and {city}'s crime rates using percentages.
 
     - Illustrate the likelihood of being a victim in {city}.
 
     - Share the 3 most dangerous areas within {city} and explain why they are dangerous in detail. 
 
     - Provide in-depth safety tips specific to the most dangerous areas and the crimes with the highest rate in {city}'s neighborhoods. 
-
-    - Explain how your safety tips will decrease being invovled with crime.
     """
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        temperature=.7,
-        max_tokens=650,
+        temperature=.6,
+        max_tokens=450,
         messages=[
             {"role": "user", "content": prompt}
         ]
