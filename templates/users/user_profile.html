@@ -2,19 +2,35 @@
 <br />
 <br />
 <br />
+
+<video
+  id="globe-video"
+  class="fixed inset-0 w-full h-full opacity-30"
+  autoplay
+  muted
+  loop
+>
+  <source
+    src="/static/images/vecteezy-earth-1022-an-earth-globe-rotates-on-a-white-cyc-loop-1623478_aQvrT7qn.mp4"
+    type="video/mp4"
+  />
+</video>
+
 <div class="flex justify-center items-start h-full">
   <div class="w-full lg:w-1/2 p-6">
     <form
       method="POST"
       action="/user_profile/{{user_id}}"
-      class="relative w-full mx-auto bg-gray-200 p-8 rounded mb-4"
+      class="relative w-full mx-auto bg-zinc-800 p-8 rounded mb-4"
     >
-      <h3 class="text-xl font-bold text-center">Edit username or email</h3>
+      <h3 class="text-xl font-bold text-center text-emerald-200">
+        Edit username or email
+      </h3>
       {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
       'hidden' %}
       <div class="mb-4">
         <label
-          class="block text-gray-700 font-bold mb-2"
+          class="block text-emerald-200 font-bold mb-2"
           for="{{ field.id_for_label }}"
           >{{ field.label }}</label
         >
@@ -54,7 +70,7 @@
       </button>
     </div>
 
-    <div class="max-h-96 overflow-y-scroll">
+    <div class="relative max-h-96 overflow-y-scroll">
       {% for post in posts %}
       <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50 mb-4">
         <div class="p-4">

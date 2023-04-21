@@ -26,12 +26,12 @@
     class="relative mt-80 w-full max-w-md mx-auto p-8 rounded backdrop-filter backdrop-blur-sm backdrop-opacity-70 bg-black bg-opacity-75"
   >
     <h1 class="text-emerald-300 font-bold text-3xl mb-4">Search a city</h1>
-    <small class="text-gray-200"
-      >Try searching by city and state for specific results</small
-    >
-    <small class="text-gray-200"
-      >if it doesn't work try searching by city</small
-    >
+    <p class="text-gray-200 font-bold">
+      Search by city and state for specific results
+    </p>
+    <p class="text-gray-200 font-bold">
+      If you encounter an error just search by city
+    </p>
     {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
     'hidden' %}
 

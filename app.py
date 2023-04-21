@@ -172,7 +172,6 @@ def homepage():
             city_state = city.capitalize() + " " + state
             place_url, place_type = get_city_url(city_state)
 
-
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
                 print("#################################")
@@ -242,10 +241,14 @@ def show_crime_data(place_url, place_type, city_state):
     for crime_name, crime_values in violent_crimes.items():
         crime_value = crime_values['value']
         national_crime = crime_values['national']
+        difference = national_crime - crime_value
+        percent_difference = difference / national_crime * 100
         violent_crime_list.append({
             'crime': crime_name,
             'city': crime_value,
-            'national': national_crime
+            'national': national_crime,
+            'difference': difference,
+            'percent_difference': percent_difference
         })
 
     # extract and compare property crime data
@@ -254,10 +257,14 @@ def show_crime_data(place_url, place_type, city_state):
     for crime_name, crime_values in property_crimes.items():
         crime_value = crime_values['value']
         national_crime = crime_values['national']
+        difference = national_crime - crime_value
+        percent_difference = difference / national_crime * 100
         property_crime_list.append({
-            "crime": crime_name,
-            "city": crime_value,
-            "national": national_crime
+            'crime': crime_name,
+            'city': crime_value,
+            'national': national_crime,
+            'difference': difference,
+            'percent_difference': percent_difference
         })
 
     posts = Post.query.filter_by(place_city_url=place_url).\
