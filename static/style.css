@@ -15,16 +15,26 @@
 
 @media (max-width: 500px) {
 	.nav-link {
-		font-size: 0.5rem;
+		font-size: 0.7rem;
 	}
 
 	.max-w-md {
 		max-width: 22rem;
 	}
 
+	.crimescope-header {
+		font-size: 1rem;
+		margin-left: -8px;
+	}
+
 
 	#screen-container-login-signup {
 		overflow-y: scroll;
+	}
+
+	#crimescope-img-header {
+		width: 1.5rem;
+		height: 1.5rem;
 	}
 
 

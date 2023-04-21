@@ -83,8 +83,6 @@ class UserViews(TestCase):
 
             resp = c.get("/logout")
             self.assertEqual(resp.status_code, 302)
-            # self.assertIn(
-            #     b'<a href="/login">/login</a>', resp.data)
 
     def test_homepage(self):
         """Test login with valid credentials."""
@@ -96,9 +94,6 @@ class UserViews(TestCase):
             resp = c.get('/')
             self.assertEqual(resp.status_code, 200)
 
-            # self.assertIn(
-            #     b'<label for="state-input">State</label>', resp.data)
-
     def test_show_crime_data(self):
 
         with self.client as c:
@@ -108,9 +103,6 @@ class UserViews(TestCase):
             resp = c.get('/atlanta-fulton-ga/Town/Atlanta')
             self.assertEqual(resp.status_code, 200)
 
-            # self.assertIn(
-            #     b'<form method="POST" class="vote-form" >\n        <input type="hidden" id="vote-id" name="vote-id" value="1" />', resp.data)
-
     def test_user_account_actions(self):
 
         with self.client as c:
@@ -119,8 +111,6 @@ class UserViews(TestCase):
 
             resp = c.get('/user_profile/1')
             self.assertEqual(resp.status_code, 200)
-            # self.assertIn(
-            #     b'<a\n  href="/delete_account"\n  class="inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"\n  >Delete account</a\n>', resp.data)
 
     def test_delete_user(self):
 

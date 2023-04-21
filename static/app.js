@@ -107,7 +107,6 @@ async function getUserPost(postId) {
   $("#user-post-container").prepend(newPost);
 
   $("#vote-form-button").on("click", () => {
-    console.log("this should flash");
     $("#flash-container-js").empty();
     $("#flash-container-js").append("You can't vote on your post").fadeIn();
     if ($("#flash-container-js").length !== 0) {
@@ -177,7 +176,7 @@ async function getAiResponse() {
   if (storedData) {
     const parsedData = JSON.parse(storedData);
     $("#ai-response").append(
-      `<textarea readonly class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${parsedData}</textarea>`
+      `<textarea readonly font-bold class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${parsedData}</textarea>`
     );
   } else {
     $("#ai-response").append(
@@ -192,7 +191,7 @@ async function getAiResponse() {
     $("#loading-container").remove();
 
     $("#ai-response").append(
-      `<textarea readonly class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${responseData}</textarea>`
+      `<textarea readonly font-bold class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${responseData}</textarea>`
     );
   }
 }
@@ -204,7 +203,7 @@ async function getNewAiResp() {
   if (responseData) {
     $("#loading-container").remove();
     $("#ai-response").append(
-      `<textarea readonly class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${responseData}</textarea>`
+      `<textarea readonly font-bold class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${responseData}</textarea>`
     );
   }
 }
@@ -224,7 +223,6 @@ if (
   (window.location.href.includes(placeUrl) && placeUrl !== null) ||
   undefined
 ) {
-  console.log("api called");
   getAiResponse();
 }
 

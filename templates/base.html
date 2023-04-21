@@ -31,9 +31,12 @@
                 src="/static/images/scope.jpg"
                 alt="fingerprint"
                 class="w-8 h-8 mr-4"
+                id="crimescope-img-header"
               />
             </a>
-            <a href="/" class="text-2xl font-bold">CrimeScope</a>
+            <a href="/" class="crimescope-header text-2xl font-bold"
+              >CrimeScope</a
+            >
           </li>
           {% if get_flashed_messages() %}
           <li
@@ -60,29 +63,36 @@
               <li>
                 <a
                   href="/signup"
-                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link font-bold text-emerald-200 hover:text-emerald-400 hover:underline"
                   >Create Account</a
                 >
               </li>
               <li>
                 <a
                   href="/login"
-                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link font-bold text-emerald-200 hover:text-emerald-400 hover:underline"
                   >Log in</a
                 >
               </li>
               {% else %}
               <li>
                 <a
+                  href="/"
+                  class="nav-link font-bold text-emerald-200 hover:text-emerald-400 hover:underline"
+                  >Search city</a
+                >
+              </li>
+              <li>
+                <a
                   href="/user_profile/{{g.user.id}}"
-                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link font-bold text-emerald-200 hover:text-emerald-400 hover:underline"
                   >Your profile</a
                 >
               </li>
               <li>
                 <a
                   href="/logout"
-                  class="nav-link bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded"
+                  class="nav-link font-bold text-emerald-200 hover:text-emerald-400 hover:underline"
                   >Log out</a
                 >
               </li>

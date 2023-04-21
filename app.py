@@ -1,6 +1,5 @@
 from flask import Flask, render_template, redirect, flash, request, session, g, jsonify, url_for
 from sqlalchemy.exc import IntegrityError
-# from flask_debugtoolbar import DebugToolbarExtension
 from models import User, Post, Place, Vote, connect_db, db
 from forms import CitySearchForm, EditUserForm, LoginForm, UserAddForm
 from openAI_api import generate_ai_response
@@ -40,7 +39,7 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "emircepocs192837465")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-# toolbar = DebugToolbarExtension(app)
+
 
 with app.app_context():
     connect_db(app)
@@ -117,9 +116,6 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
-            print("##########################################")
-            print('CSRF token:', request.form['csrf_token'])
-            print("##########################################")
             return redirect(url_for("homepage"))
 
         flash("Invalid credentials.", 'danger')
@@ -166,18 +162,11 @@ def homepage():
         if form.validate_on_submit():
             city = form.city.data
             state = form.state.data or ''
-            print("##########################################")
-            print('CSRF token:', request.form['csrf_token'])
-            print("##########################################")
             city_state = city.capitalize() + " " + state
             place_url, place_type = get_city_url(city_state)
 
             existing_place = Place.query.filter_by(city_url=place_url).first()
             if existing_place:
-                print("#################################")
-                print(
-                    f"existing place, {place_url}, {place_type}, {city_state}")
-                print("#################################")
                 return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
             else:
                 if place_url:
@@ -185,10 +174,6 @@ def homepage():
                     db.session.add(place)
                     db.session.commit()
 
-                    print("#################################")
-                    print(
-                        f"new place, {place_url}, {place_type}, {city_state}")
-                    print("#################################")
                     return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
                 else:
                     print("cant find place!")
@@ -196,10 +181,6 @@ def homepage():
 
         return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type, city_state=city_state)
     else:
-        print("#################################")
-        print(
-            f"JUST REDIRECTING, {place_url}, {place_type}, {city_state}")
-        print("#################################")
         return redirect("/signup")
 
 
@@ -243,6 +224,7 @@ def show_crime_data(place_url, place_type, city_state):
         national_crime = crime_values['national']
         difference = national_crime - crime_value
         percent_difference = difference / national_crime * 100
+        percent_difference = int(round(percent_difference))
         violent_crime_list.append({
             'crime': crime_name,
             'city': crime_value,
@@ -259,6 +241,7 @@ def show_crime_data(place_url, place_type, city_state):
         national_crime = crime_values['national']
         difference = national_crime - crime_value
         percent_difference = difference / national_crime * 100
+        percent_difference = int(round(percent_difference))
         property_crime_list.append({
             'crime': crime_name,
             'city': crime_value,
