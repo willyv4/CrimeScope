@@ -8,7 +8,7 @@
 
 ## Database Schema:
 
-<img src="schema.jpg"/>
+<img src="/schema.jpg"/>
 
 ## Stack
 
