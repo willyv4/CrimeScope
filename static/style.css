@@ -30,23 +30,29 @@
 
 	#form-container-login-signup {
 		max-width: 80%;
-		margin-bottom: 16rem;
-		margin-top: 4rem;
+		margin-bottom: 18rem;
+		margin-top: 2rem;
+	}
+	#form-container-login-signup input {
+		padding: 2px;
+	}
+	#form-container-login-signup button {
+		padding: 2px;
 	}
 	
 	#phrase-container-login-signup {
 		font-size: 2rem;
-		width: 90%;
 		margin-left: auto;
 		margin-right: auto;
-		margin-top: 10%;
+		width: 80%;
+		margin-top: 8%;
 	}
 
 	#scope-img {
 		position: absolute;
-		top: 35%;
+		top: 30%;
 		left: 50%;
-		transform: translate(-50%, -50%) scale(.75);
+		transform: translate(-50%, -50%) scale(.6);
 	 }
 
 	#city-form-home {
@@ -56,4 +62,37 @@
 		right: 0;
 		margin: 0 auto;
 	} 
+
+	#city-form-home input {
+		padding: 2px;
+	}
+	#city-form-home select {
+		padding: 2px;
+	}
+	#city-form-home button {
+		padding: 2px;
+	}
+
 } 
+
+
+#loading::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  margin: auto;
+  border-style: solid;
+  border-radius: 50%;
+  border-color: #fff transparent transparent transparent;
+  animation: spin 1s infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

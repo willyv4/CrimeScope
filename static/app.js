@@ -176,35 +176,24 @@ async function getAiResponse() {
 
   if (storedData) {
     const parsedData = JSON.parse(storedData);
-    $("#ai-response").append(`<p>${parsedData}</p>`);
+    $("#ai-response").append(
+      `<textarea readonly class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${parsedData}</textarea>`
+    );
   } else {
-    $("#ai-response").append(`
-       <div id="loading" class="p-4 w-full mx-auto h-full">
-  <div class="animate-pulse flex space-x-4">
-    <div class="rounded-full bg-gray-200 h-10 w-10"></div>
-    <div class="flex-1 space-y-6 py-1">
-      <div class="h-2 bg-gray-200 rounded"></div>
-      <div class="space-y-3">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="h-2 bg-gray-200 rounded col-span-2"></div>
-          <div class="h-2 bg-gray-200 rounded col-span-1"></div>
-        </div>
-        <div class="h-2 bg-gray-200 rounded"></div>
-      </div>
-      <h1 class="text-center">GENERATING RESPONSE...</h1>
-    </div>
-  </div>
-</div>
-    `);
+    $("#ai-response").append(
+      `<div id="loading-container" class="flex items-center justify-center w-full h-full"><i id="loading" class="fa fa-spinner fa-spin text-4xl"></i> <span class="ml-2">CrimeScope BOT is thinking...</span></div>`
+    );
 
     const response = await axios.get("/generate_ai");
     const responseData = response.data["data"];
 
     localStorage.setItem(storageKey, JSON.stringify(responseData));
 
-    $("#loading").remove();
+    $("#loading-container").remove();
 
-    $("#ai-response").append(`<p>${responseData}</p>`);
+    $("#ai-response").append(
+      `<textarea readonly class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${responseData}</textarea>`
+    );
   }
 }
 
@@ -213,32 +202,19 @@ async function getNewAiResp() {
   const responseData = response.data["data"];
 
   if (responseData) {
-    $("#loading").remove();
-    $("#ai-response").append(`<p>${responseData}</p>`);
+    $("#loading-container").remove();
+    $("#ai-response").append(
+      `<textarea readonly class="w-full h-full overflow-y-scroll p-6 focus:outline-none focus:shadow-outline resize-none">${responseData}</textarea>`
+    );
   }
 }
 
 $("#generate-ai-resp").click(function () {
   $("#ai-response").empty();
 
-  $("#ai-response").append(`
-      <div id="loading" class="p-4 w-full mx-auto h-full">
-  <div class="animate-pulse flex space-x-4">
-    <div class="rounded-full bg-gray-200 h-10 w-10"></div>
-    <div class="flex-1 space-y-6 py-1">
-      <div class="h-2 bg-gray-200 rounded"></div>
-      <div class="space-y-3">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="h-2 bg-gray-200 rounded col-span-2"></div>
-          <div class="h-2 bg-gray-200 rounded col-span-1"></div>
-        </div>
-        <div class="h-2 bg-gray-200 rounded"></div>
-      </div>
-      <h1 class="text-center">GENERATING RESPONSE...</h1>
-    </div>
-  </div>
-</div>
-    `);
+  $("#ai-response").append(
+    `<div id="loading-container" class="flex items-center justify-center w-full h-full"><i id="loading" class="fa fa-spinner fa-spin text-4xl"></i> <span class="ml-2">CrimeScope BOT is thinking...</span></div>`
+  );
 
   getNewAiResp();
 });
