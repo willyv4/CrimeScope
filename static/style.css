@@ -96,3 +96,11 @@
     transform: rotate(360deg);
   }
 }
+
+.bg-emerald-300 {
+ background-color: #86efac;
+}
+
+.bg-gray-300 {
+ background-color: #d1d5db;
+}
