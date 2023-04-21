@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-screen w-screen">
+<html lang="en" class="h-screen">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -21,7 +21,7 @@
 
     <title>CrimeScope</title>
   </head>
-  <body class="h-screen w-screen">
+  <body>
     <nav class="fixed top-0 w-full z-40 bg-black opacity-90 text-white py-4">
       <div class="container mx-auto px-4">
         <ul class="flex justify-between">
@@ -48,6 +48,11 @@
             {% endfor %}
           </li>
           {% endif %}
+
+          <li
+            id="flash-container-js"
+            class="hidden absolute z-40 top-16 md:top-16 w-full text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold text-emerald-300 bg-black p-4"
+          ></li>
 
           <li>
             <ul class="flex space-x-4 mt-1">

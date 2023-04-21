@@ -108,11 +108,11 @@ async function getUserPost(postId) {
 
   $("#vote-form-button").on("click", () => {
     console.log("this should flash");
-    $("#flash-container").empty();
-    $("#flash-container").append("You can't vote on your post").fadeIn();
-    if ($("#flash-container").length !== 0) {
+    $("#flash-container-js").empty();
+    $("#flash-container-js").append("You can't vote on your post").fadeIn();
+    if ($("#flash-container-js").length !== 0) {
       setTimeout(() => {
-        $("#flash-container").fadeOut();
+        $("#flash-container-js").fadeOut();
       }, 2000);
     }
   });
@@ -137,11 +137,11 @@ async function postUpvote(data) {
   const postId = resp.data[0]["post-id"];
 
   $(`#vote-form-button-${postId}`).removeClass().addClass(voteClass);
-  $("#flash-container").empty();
-  $("#flash-container").append(message).fadeIn();
-  if ($("#flash-container").length !== 0) {
+  $("#flash-container-js").empty();
+  $("#flash-container-js").append(message).fadeIn();
+  if ($("#flash-container-js").length !== 0) {
     setTimeout(() => {
-      $("#flash-container").fadeOut();
+      $("#flash-container-js").fadeOut();
     }, 2000);
   }
 }
