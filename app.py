@@ -218,7 +218,6 @@ def show_crime_data(place_url, place_type, city_state):
 
     violent_crime_list = []
     violent_crimes = crimes['Violent Crimes']
-
     for crime_name, crime_values in violent_crimes.items():
         crime_value = crime_values['value']
         national_crime = crime_values['national']
@@ -227,8 +226,8 @@ def show_crime_data(place_url, place_type, city_state):
         percent_difference = int(round(percent_difference))
         violent_crime_list.append({
             'crime': crime_name,
-            'city': crime_value,
-            'national': national_crime,
+            'city': int(round(crime_value)),
+            'national': int(round(national_crime)),
             'difference': difference,
             'percent_difference': percent_difference
         })
@@ -244,8 +243,8 @@ def show_crime_data(place_url, place_type, city_state):
         percent_difference = int(round(percent_difference))
         property_crime_list.append({
             'crime': crime_name,
-            'city': crime_value,
-            'national': national_crime,
+            'city': int(round(crime_value)),
+            'national': int(round(national_crime)),
             'difference': difference,
             'percent_difference': percent_difference
         })
