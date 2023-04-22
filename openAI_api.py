@@ -30,6 +30,8 @@ def generate_ai_response(crime_data, city):
         })
 
     prompt = f"""
+    Act as a local familiar crime in {city}.
+
     Use this Crime data for {city}: violent crimes include {violent_crime_list}, and property crimes include {property_crime_list}.
 
     Create a response based on the following:
@@ -40,7 +42,7 @@ def generate_ai_response(crime_data, city):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         temperature=.7,
-        max_tokens=320,
+        max_tokens=370,
         messages=[
             {"role": "user", "content": prompt}
         ]
