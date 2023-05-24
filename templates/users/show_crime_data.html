@@ -102,7 +102,7 @@
 
     <div
       class="flex flex-col -mt-4 lg:mt-20 w-1/3 lg:w-1/3 w-full"
-      style="max-height: 132vh"
+      style="max-height: 140vh"
     >
       <form
         id="create_post_for_city"
@@ -111,7 +111,7 @@
         class="lg:w-full w-11/12 h-30 mx-auto p-10 mt-6 lg:mt-2 mb-5 rounded shadow-lg bg-zinc-800 "
       >
 
-        <h1 class="text-2xl font-bold text-center text-emerald-200 mb-4">Share your advice</h1>
+        <h1 class="text-2xl font-bold text-center text-emerald-200 mb-8 ">Share your advice</h1>
         <input type="hidden" id="place-type" value="{{ place_type }}" />
         <input type="hidden" id="place-url" value="{{ place_url }}" />
         <input type="hidden" id="city-name" value="{{ city }}" />
@@ -157,7 +157,7 @@
       </form>
       <div
         id="user-post-container"
-        class="flex flex-col gap-8 h-2/3 overflow-auto -mt-4 p-4 shadow-inner rounded"
+        class="flex flex-col gap-8 h-5/6 overflow-auto -mt-2 p-4 shadow-inner rounded"
       >
         {% if posts %} {% for post in posts %}
         <div class="border-2 border-gray-500 rounded shadow-lg bg-gray-50">
@@ -222,7 +222,7 @@
         </div>
         {% endfor %} {% else %}
         <div id="no-post-content" >
-          <h1 class="text-2xl font-bold text-center mb-20"> No posts yet,share your advice about {{city}}.</h1> 
+          <h1 class="text-2xl font-bold text-center mb-20"> No posts yet, share your advice about {{city}}.</h1> 
             <img
         id="no-post-content"
         src="/static/images/scope.jpg"
