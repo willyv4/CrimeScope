@@ -240,23 +240,3 @@ $("#toggle-delete-visibility").on("click", () => {
     delBtn.addClass("hidden");
   });
 });
-
-/* 
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  KEEP CHATGPT API CONNECTION ALIVE 
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-const keepAlive = async () => {
-  try {
-    const response = await axios.get("/generate_ai");
-    console.log("Keep alive request sent.");
-  } catch (error) {
-    console.error("Error in keep alive request:", error);
-  }
-};
-
-// Schedule the initial keep alive request
-keepAlive();
-
-// Schedule subsequent keep alive requests every 2.5 hours
-setInterval(keepAlive, 2.5 * 60 * 60 * 1000);

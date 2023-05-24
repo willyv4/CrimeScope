@@ -1,5 +1,7 @@
 import openai
 import os
+import schedule
+import time
 
 openai.api_key = os.getenv("openai_api_key")
 
@@ -30,3 +32,16 @@ def generate_ai_response(v_crime, p_crime, city):
     ai_resp = response.choices[0].message.content.strip()
 
     return ai_resp
+
+
+def job():
+
+    ai_resp = generate_ai_response("0", "0", "ivins, ut")
+    print(ai_resp)
+
+
+schedule.every(2.5).hours.do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
