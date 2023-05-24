@@ -50,3 +50,43 @@ def get_crime_data(place, place_type):
         return place_data
     else:
         return {"error": "status is not 200"}
+
+# make a seperate folder to handle api responnse
+
+
+def crime_data_formulated(crimes):
+
+    violent_crime_list = []
+    violent_crimes = crimes['Violent Crimes']
+    for crime_name, crime_values in violent_crimes.items():
+        crime_value = crime_values['value']
+        national_crime = crime_values['national']
+        difference = national_crime - crime_value
+        percent_difference = difference / national_crime * 100
+        percent_difference = int(round(percent_difference))
+        violent_crime_list.append({
+            'crime': crime_name,
+            'city': int(round(crime_value)),
+            'national': int(round(national_crime)),
+            'difference': difference,
+            'percent_difference': percent_difference
+        })
+
+    # extract and compare property crime data
+    property_crime_list = []
+    property_crimes = crimes['Property Crimes']
+    for crime_name, crime_values in property_crimes.items():
+        crime_value = crime_values['value']
+        national_crime = crime_values['national']
+        difference = national_crime - crime_value
+        percent_difference = difference / national_crime * 100
+        percent_difference = int(round(percent_difference))
+        property_crime_list.append({
+            'crime': crime_name,
+            'city': int(round(crime_value)),
+            'national': int(round(national_crime)),
+            'difference': difference,
+            'percent_difference': percent_difference
+        })
+
+    return violent_crime_list, property_crime_list

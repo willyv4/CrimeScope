@@ -3,10 +3,12 @@ from sqlalchemy.exc import IntegrityError
 from models import User, Post, Place, Vote, connect_db, db
 from forms import CitySearchForm, EditUserForm, LoginForm, UserAddForm
 from openAI_api import generate_ai_response
-from places_api import get_city_url, get_crime_data
+from places_api import crime_data_formulated, get_city_url, get_crime_data
 from sqlalchemy import desc, func
 import os
 import time
+
+# use code formatter
 
 
 CURR_USER_KEY = "curr_user"
@@ -88,9 +90,6 @@ def signup():
                 email=form.email.data,
             )
             db.session.commit()
-            print("##########################################")
-            print('CSRF token:', request.form['csrf_token'])
-            print("##########################################")
         except IntegrityError:
             flash("Username already taken", 'danger')
             return render_template('users/signup.html', form=form)
@@ -150,6 +149,9 @@ def homepage():
     If the request method is POST and the form is invalid, renders the homepage with the form and error message.
     """
 
+    # put whole function defintion in a file called homepage
+    # make routes folder with specific routes
+
     place_url = None
     city = None
     place_type = None
@@ -176,7 +178,6 @@ def homepage():
 
                     return redirect(url_for("show_crime_data", place_url=place_url, place_type=place_type, city_state=city_state))
                 else:
-                    print("cant find place!")
                     flash("Whoops there was an error. Try another search")
 
         return render_template("home.html", form=form, place_url=place_url, city=city, place_type=place_type, city_state=city_state)
@@ -212,42 +213,11 @@ def show_crime_data(place_url, place_type, city_state):
         return redirect("/")
 
     crimes = crime_data['crime-safety']
+    violent_crime_list, property_crime_list = crime_data_formulated(
+        crimes)
 
     session["crimes"] = crimes
     session["city"] = city_state
-
-    violent_crime_list = []
-    violent_crimes = crimes['Violent Crimes']
-    for crime_name, crime_values in violent_crimes.items():
-        crime_value = crime_values['value']
-        national_crime = crime_values['national']
-        difference = national_crime - crime_value
-        percent_difference = difference / national_crime * 100
-        percent_difference = int(round(percent_difference))
-        violent_crime_list.append({
-            'crime': crime_name,
-            'city': int(round(crime_value)),
-            'national': int(round(national_crime)),
-            'difference': difference,
-            'percent_difference': percent_difference
-        })
-
-    # extract and compare property crime data
-    property_crime_list = []
-    property_crimes = crimes['Property Crimes']
-    for crime_name, crime_values in property_crimes.items():
-        crime_value = crime_values['value']
-        national_crime = crime_values['national']
-        difference = national_crime - crime_value
-        percent_difference = difference / national_crime * 100
-        percent_difference = int(round(percent_difference))
-        property_crime_list.append({
-            'crime': crime_name,
-            'city': int(round(crime_value)),
-            'national': int(round(national_crime)),
-            'difference': difference,
-            'percent_difference': percent_difference
-        })
 
     posts = Post.query.filter_by(place_city_url=place_url).\
         outerjoin(Vote).group_by(Post.id).\
@@ -346,6 +316,9 @@ def delete_post(post_id):
 # API ENDPOINTS TO ACCESS DATA VIA FRONTEND ~~~~~~~~~~~~~~~~~~~~~ #
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+# make a seperate folder apis
+# make routes /api/ name of route create more of a standard
 
 
 @app.route('/create/userpost', methods=["GET", "POST"])
@@ -513,6 +486,9 @@ def generate_ai():
     Returns:
         - (json): A JSON response containing the generated AI response.
     """
+
+    # get data from front end as post request
+
     crimes = session.get('crimes')
     city = session.get("city")
 
@@ -525,7 +501,11 @@ def generate_ai():
         session['crimes'] = crimes
         session['city'] = city
 
-    ai_resp = generate_ai_response(crimes, city)
+    violent_crime_list, property_crime_list = crime_data_formulated(
+        crimes)
+
+    ai_resp = generate_ai_response(
+        violent_crime_list, property_crime_list, city)
 
     if crimes:
         # Only pop the old data if there is new data in the query string
