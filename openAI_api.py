@@ -31,20 +31,3 @@ def generate_ai_response(v_crime, p_crime, city):
     ai_resp = response.choices[0].message.content.strip()
 
     return ai_resp
-
-
-def job():
-    try:
-        ai_resp = generate_ai_response("0", "0", "ivins, ut")
-    # Do something with the response if needed
-    except Exception as e:
-        # Handle the error or perform any necessary actions
-        print(f"Error occurred in generate_ai_response: {e}")
-
-    # Schedule the next execution after 2.5 hours
-    time.sleep(2.5 * 60 * 60)
-    job()
-
-
-# Start the initial execution
-job()
