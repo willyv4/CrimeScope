@@ -512,7 +512,11 @@ def generate_ai():
         if new_crimes and new_city:
             session.pop("crimes")
             session.pop("city")
-        return jsonify(data=ai_resp)
+        response = jsonify(data=ai_resp)
+        # Replace with your frontend origin
+        response.headers.add('Access-Control-Allow-Origin',
+                             'http://127.0.0.1:5500')
+        return response
 
     return jsonify({'error': 'Crime data not found in session'})
 
